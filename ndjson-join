@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+
+var fs = require("fs"),
+    readline = require("readline"),
+    vm = require("vm"),
+    expression = require("./expression"),
+    output = require("./output");
+
+if (process.argv.length < 6) {
+  if (process.argv.length < 5) {
+    process.argv[4] = "i";
+  }
+  process.argv[5] = process.argv[4];
+} else if (process.argv.length > 6) {
+  console.error("usage: ndjson-join <a-file> <b-file> [a-expression [b-expression]]");
+  process.exit(1);
+}
+
+var ai = -1,
+    bi = -1,
+    ci = 0,
+    sandbox = {d: undefined, i: -1},
+    map = new Map,
+    aid = expression(process.argv[4]),
+    bid = expression(process.argv[5]),
+    context = new vm.createContext(sandbox);
+
+readline.createInterface({
+  input: process.argv[2] === "-" ? process.stdin : fs.createReadStream(process.argv[2]),
+  output: null
+}).on("line", function(line) {
+  sandbox.i = ++ai;
+  try {
+    sandbox.d = JSON.parse(line);
+  } catch (error) {
+    console.error("stdin:" + (ai + 1));
+    console.error(line);
+    console.error("^");
+    console.error("SyntaxError: " + error.message);
+    process.exit(1);
+  }
+  var k = aid.runInContext(context);
+  if (map.has(k)) map.get(k).a.push(sandbox.d);
+  else map.set(k, {a: [sandbox.d], b: []});
+}).on("close", function() {
+  if ((ci |= 1) === 3) join();
+});
+
+readline.createInterface({
+  input: process.argv[3] === "-" ? process.stdin : fs.createReadStream(process.argv[3]),
+  output: null
+}).on("line", function(line) {
+  sandbox.i = ++bi;
+  try {
+    sandbox.d = JSON.parse(line);
+  } catch (error) {
+    console.error("stdin:" + (bi + 1));
+    console.error(line);
+    console.error("^");
+    console.error("SyntaxError: " + error.message);
+    process.exit(1);
+  }
+  var k = bid.runInContext(context);
+  if (map.has(k)) map.get(k).b.push(sandbox.d);
+  else map.set(k, {a: [], b: [sandbox.d]});
+}).on("close", function() {
+  if ((ci |= 2) === 3) join();
+});
+
+function join() {
+  map.forEach(function(value, key) {
+    value.a.forEach(function(a) {
+      value.b.forEach(function(b) {
+        output([a, b]);
+      });
+    });
+  });
+}

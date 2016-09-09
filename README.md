@@ -78,6 +78,48 @@ For example, given a single GeoJSON feature collection from [shp2json](https://g
 shp2json example.shp | ndjson-split 'd.features'
 ```
 
+<a name="ndjson_join" href="ndjson_join">#</a> <b>ndjson-join</b> <i>a-file</i> <i>b-file</i> [<i>a-expression</i> [<i>b-expression</i>]]
+
+Joins the two newline-delimited JSON streams in *a-file* and *b-file* according to the specified expressions *a-expression* and *b-expression*. For each JSON object *d* at the zero-based index *i* in the stream *a-file*, the corresponding key is the result of evaluating the *a-expression*. Similarly, for each JSON object *d* at the zero-based index *i* in the stream *b-file*, the corresponding key is the result of evaluating the *b-expression*. When both input streams end, for each distinct key, the cartesian product of corresponding objects *a* and *b* are output as an array `[a, b]`. If *a-expression* is not specified, it defaults to `i`, joining the two streams by line number; in this case, the length of the output stream is the shorter of the two input streams. If *b-expression* is not specified, it defaults to *a-expression*.
+
+For example, consider the CSV file *a.csv*:
+
+```csv
+name,color
+Fred,red
+Alice,green
+Bob,blue
+```
+
+And *b.csv*:
+
+```csv
+name,number
+Fred,21
+Alice,42
+Bob,102
+```
+
+To merge these into a single stream by name using [csv2json](https://github.com/d3/d3-dsv/blob/master/README.md#command-line-reference):
+
+```
+ndjson-join <(csv2json -n a.csv) <(csv2json -n b.csv) 'd.name'
+```
+
+The resulting output is:
+
+```json
+[{"name":"Fred","color":"red"},{"name":"Fred","number":"21"}]
+[{"name":"Alice","color":"green"},{"name":"Alice","number":"42"}]
+[{"name":"Bob","color":"blue"},{"name":"Bob","number":"102"}]
+```
+
+To consolidate the results into a single object, use [ndjson-map](#ndjson-map):
+
+```
+ndjson-join <(csv2json -n a.csv) <(csv2json -n b.csv) 'd.name' | ndjson-map '{name: d[0].name, color: d[0].color, number: d[1].number}'
+```
+
 <a name="ndjson_sort" href="ndjson_sort">#</a> <b>ndjson-sort</b> [<i>expression</i>]
 
 Sorts the newline-delimited JSON stream on stdin according to the specified comparator *expression*. After reading the entire input stream, [sorts the array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) of objects with a comparator that evaluates the *expression* for two given JSON objects *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js).
