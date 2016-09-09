@@ -23,6 +23,6 @@ readline.createInterface({
     process.exit(1);
   }
   if (filter.runInContext(context)) {
-    console.log(line);
+    console.log(JSON.stringify(sandbox.d));
   }
 });
