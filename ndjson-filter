@@ -2,6 +2,7 @@
 
 var readline = require("readline"),
     vm = require("vm"),
+    expression = require("./expression"),
     output = require("./output");
 
 if (process.argv.length !== 3) {
@@ -11,7 +12,7 @@ if (process.argv.length !== 3) {
 
 var i = -1,
     sandbox = {d: undefined, i: i},
-    filter = new vm.Script(process.argv[2]),
+    filter = expression(process.argv[2]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({

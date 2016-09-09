@@ -2,6 +2,7 @@
 
 var readline = require("readline"),
     vm = require("vm"),
+    expression = require("./expression"),
     output = require("./output");
 
 if (process.argv.length < 3 || process.argv.length > 4) {
@@ -11,8 +12,8 @@ if (process.argv.length < 3 || process.argv.length > 4) {
 
 var i = -1,
     unset = process.argv.length < 4,
-    sandbox = {p: unset ? undefined : vm.runInNewContext(process.argv[3]), d: undefined, i: i},
-    reduce = new vm.Script(process.argv[2]),
+    sandbox = {p: unset ? undefined : expression(process.argv[3], "initial").runInNewContext(), d: undefined, i: i},
+    reduce = expression(process.argv[2]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({
