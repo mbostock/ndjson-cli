@@ -1,5 +1,7 @@
 # ndjson-cli
 
+Unix-y tools for operating on [newline-delimited JSON](http://ndjson.org) streams.
+
 ```
 npm install ndjson-cli
 ```
