@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 var readline = require("readline"),
-    vm = require("vm");
+    vm = require("vm"),
+    stringify = require("./stringify");
 
 var i = -1,
     sandbox = {d: undefined, i: i},
@@ -23,6 +24,6 @@ readline.createInterface({
     process.exit(1);
   }
   if (filter.runInContext(context)) {
-    console.log(JSON.stringify(sandbox.d));
+    process.stdout.write(stringify(sandbox.d) + "\n");
   }
 });

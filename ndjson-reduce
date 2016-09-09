@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 var readline = require("readline"),
-    vm = require("vm");
+    vm = require("vm"),
+    stringify = require("./stringify");
 
 var i = -1,
     unset = process.argv.length < 4,
@@ -25,5 +26,5 @@ readline.createInterface({
   }
   sandbox.p = unset ? (unset = false, sandbox.d) : reduce.runInContext(context);
 }).on("close", function() {
-  console.log(JSON.stringify(sandbox.p));
+  process.stdout.write(stringify(sandbox.p) + "\n");
 });
