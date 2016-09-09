@@ -4,6 +4,11 @@ var readline = require("readline"),
     vm = require("vm"),
     output = require("./output");
 
+if (process.argv.length < 3 || process.argv.length > 4) {
+  console.error("usage: ndjson-reduce <expression> [initial]");
+  process.exit(1);
+}
+
 var i = -1,
     unset = process.argv.length < 4,
     sandbox = {p: unset ? undefined : vm.runInNewContext(process.argv[3]), d: undefined, i: i},

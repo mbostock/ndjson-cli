@@ -4,6 +4,11 @@ var readline = require("readline"),
     vm = require("vm"),
     output = require("./output");
 
+if (process.argv.length !== 3) {
+  console.error("usage: ndjson-sort <expression>");
+  process.exit(1);
+}
+
 var i = -1,
     results = [],
     sandbox = {a: undefined, b: undefined},

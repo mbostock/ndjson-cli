@@ -4,6 +4,11 @@ var readline = require("readline"),
     vm = require("vm"),
     output = require("./output");
 
+if (process.argv.length !== 3) {
+  console.error("usage: ndjson-filter <expression>");
+  process.exit(1);
+}
+
 var i = -1,
     sandbox = {d: undefined, i: i},
     filter = new vm.Script(process.argv[2]),
