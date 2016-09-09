@@ -20,7 +20,8 @@
   "bin": {
     "ndjson-filter": "ndjson-filter",
     "ndjson-map": "ndjson-map",
-    "ndjson-reduce": "ndjson-reduce"
+    "ndjson-reduce": "ndjson-reduce",
+    "ndjson-split": "ndjson-split"
   },
   "scripts": {
     "postpublish": "git push && git push --tags"

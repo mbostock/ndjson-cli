@@ -49,3 +49,19 @@ For example, to count the number of objects in a stream of GeoJSON features from
 ```
 shp2json -n example.shp | ndjson-reduce 'p + 1' '0'
 ```
+
+To merge a stream into a single object (an array), like the inverse of [ndjson-split](#ndjson_split):
+
+```
+shp2json -n example.shp | ndjson-reduce 'p.push(d), p' '[]'
+```
+
+<a name="ndjson_split" href="ndjson_split">#</a> <b>ndjson-split</b> <i>expression</i>
+
+Expands the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the results of evaluating the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream. The result of evaluating the *expression* must be an array (though it may be the empty array if no objects should be output for the given input).
+
+For example, given a single GeoJSON feature collection from [shp2json](https://github.com/mbostock/shapefile/blob/master/README.md#shp2json), you can convert a stream of features like so:
+
+```
+shp2json example.shp | ndjson-split 'd.features'
+```
