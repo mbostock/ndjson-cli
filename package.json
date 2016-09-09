@@ -4,7 +4,8 @@
   "description": "Command line tools for operating on newline-delimited JSON streams.",
   "keywords": [
     "ndjson",
-    "filter"
+    "filter",
+    "map"
   ],
   "homepage": "https://github.com/mbostock/ndjson-cli",
   "license": "BSD-3-Clause",
@@ -17,7 +18,8 @@
     "url": "http://github.com/mbostock/ndjson-cli.git"
   },
   "bin": {
-    "ndjson-filter": "ndjson-filter"
+    "ndjson-filter": "ndjson-filter",
+    "ndjson-map": "ndjson-map"
   },
   "scripts": {
     "postpublish": "git push && git push --tags"

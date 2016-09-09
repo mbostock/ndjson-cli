@@ -4,7 +4,7 @@
 npm install ndjson-cli
 ```
 
-## ndjson-filter
+## Command Line Reference
 
 <a name="ndjson_filter" href="ndjson_filter">#</a> <b>ndjson-filter</b> <i>expression</i>
 
@@ -26,4 +26,14 @@ Side-effects during filter are allowed. For example, to delete a property:
 
 ```
 shp2json -n example.shp | ndjson-filter 'delete d.properties.FID, true'
+```
+
+<a name="ndjson_map" href="ndjson_map">#</a> <b>ndjson-map</b> <i>expression</i>
+
+Maps the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the result of evaluating the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream. This program is much like [*array*.map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map).
+
+For example, given a stream of GeoJSON features from [shp2json](https://github.com/mbostock/shapefile/blob/master/README.md#shp2json), you can convert the stream to geometries like so:
+
+```
+shp2json -n example.shp | ndjson-map 'd.geometry'
 ```
