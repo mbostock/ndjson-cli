@@ -76,6 +76,12 @@ Or to produce an array of features, like the inverse of [ndjson-split](#ndjson_s
 shp2json -n example.shp | ndjson-reduce
 ```
 
+To convert a newline-delimited JSON stream of values to a JSON array:
+
+```
+ndjson-reduce < values.ndjson > array.json
+```
+
 <a name="ndjson_split" href="#ndjson_split">#</a> <b>ndjson-split</b> [<i>expression</i>]
 
 Expands the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the results of evaluating the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream. The result of evaluating the *expression* must be an array (though it may be the empty array if no objects should be output for the given input). If *expression* is not specified, it defaults to `d`, which assumes that the input objects are arrays.
@@ -84,6 +90,12 @@ For example, given a single GeoJSON feature collection from [shp2json](https://g
 
 ```
 shp2json example.shp | ndjson-split 'd.features'
+```
+
+To convert a JSON array to a newline-delimited JSON stream of values:
+
+```
+ndjson-split < array.json > values.ndjson
 ```
 
 <a name="ndjson_join" href="#ndjson_join">#</a> <b>ndjson-join</b> <i>a-file</i> <i>b-file</i> [<i>a-expression</i> [<i>b-expression</i>]]
