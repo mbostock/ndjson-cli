@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+var readline = require("readline"),
+    vm = require("vm");
+
+var i = -1,
+    sandbox = {d: undefined, i: i},
+    filter = new vm.Script(process.argv[2]),
+    context = new vm.createContext(sandbox);
+
+readline.createInterface({
+  input: process.stdin,
+  output: null
+}).on("line", function(line) {
+  sandbox.i = ++i;
+  try {
+    sandbox.d = JSON.parse(line);
+  } catch (error) {
+    console.error("stdin:" + (i + 1));
+    console.error("    " + line);
+    console.error("    ^");
+    console.error(error.stack);
+    process.exit(1);
+  }
+  if (filter.runInContext(context)) {
+    console.log(line);
+  }
+});

@@ -1,0 +1,22 @@
+{
+  "name": "ndjson-cli",
+  "version": "0.0.0",
+  "description": "Command line programs for operating on newline-delimited JSON streams.",
+  "keywords": [
+    "ndjson",
+    "filter"
+  ],
+  "homepage": "https://github.com/mbostock/ndjson-cli",
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "Mike Bostock",
+    "url": "https://bost.ocks.org/mike"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mbostock/ndjson-cli.git"
+  },
+  "bin": {
+    "ndjson-filter": "ndjson-filter"
+  }
+}
