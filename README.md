@@ -98,7 +98,7 @@ For example, to output the GeoJSON feature with the largest size property:
 shp2json -n example.shp | ndjson-top 'a.properties.size - b.properties.size'
 ```
 
-This program is equivalent to `ndjson-sort expression | tail -n count`, except it is much more efficient if *count* is much smaller than the size of the input object stream.
+This program is equivalent to `ndjson-sort expression | tail -n count`, except it is much more efficient if *count* is smaller than the size of the input object stream.
 
 ## Recipes
 
