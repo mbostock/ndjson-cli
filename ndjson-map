@@ -2,7 +2,7 @@
 
 var readline = require("readline"),
     vm = require("vm"),
-    stringify = require("./stringify");
+    output = require("./output");
 
 var i = -1,
     sandbox = {d: undefined, i: i},
@@ -23,5 +23,5 @@ readline.createInterface({
     console.error("SyntaxError: " + error.message);
     process.exit(1);
   }
-  process.stdout.write(stringify(map.runInContext(context)) + "\n");
+  output(map.runInContext(context));
 });

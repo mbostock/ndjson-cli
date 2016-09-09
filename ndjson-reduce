@@ -2,7 +2,7 @@
 
 var readline = require("readline"),
     vm = require("vm"),
-    stringify = require("./stringify");
+    output = require("./output");
 
 var i = -1,
     unset = process.argv.length < 4,
@@ -26,5 +26,5 @@ readline.createInterface({
   }
   sandbox.p = unset ? (unset = false, sandbox.d) : reduce.runInContext(context);
 }).on("close", function() {
-  process.stdout.write(stringify(sandbox.p) + "\n");
+  output(sandbox.p);
 });

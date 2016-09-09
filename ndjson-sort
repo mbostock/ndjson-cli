@@ -2,7 +2,7 @@
 
 var readline = require("readline"),
     vm = require("vm"),
-    stringify = require("./stringify");
+    output = require("./output");
 
 var i = -1,
     results = [],
@@ -27,5 +27,5 @@ readline.createInterface({
 }).on("close", function() {
   results
       .sort(function(a, b) { return sandbox.a = a, sandbox.b = b, compare.runInContext(context); })
-      .forEach(function(o) { process.stdout.write(stringify(o) + "\n"); });
+      .forEach(output);
 });

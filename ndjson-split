@@ -2,7 +2,7 @@
 
 var readline = require("readline"),
     vm = require("vm"),
-    stringify = require("./stringify");
+    output = require("./output");
 
 var i = -1,
     sandbox = {d: undefined, i: i},
@@ -28,12 +28,8 @@ readline.createInterface({
     console.error("stdin:" + (i + 1));
     console.error("    " + stringify(rows));
     console.error("    ^");
-    console.error("TypeError: result is not an array");
+    console.error("TypeError: not array");
     process.exit(1);
   }
-  for (var j = 0, m = rows.length; j < m; ++j) {
-    if (j in rows) {
-      process.stdout.write(stringify(rows[j]) + "\n");
-    }
-  }
+  Array.prototype.forEach.call(rows, output);
 });

@@ -2,7 +2,7 @@
 
 var readline = require("readline"),
     vm = require("vm"),
-    stringify = require("./stringify");
+    output = require("./output");
 
 var i = -1,
     sandbox = {d: undefined, i: i},
@@ -24,6 +24,6 @@ readline.createInterface({
     process.exit(1);
   }
   if (filter.runInContext(context)) {
-    process.stdout.write(stringify(sandbox.d) + "\n");
+    output(sandbox.d);
   }
 });
