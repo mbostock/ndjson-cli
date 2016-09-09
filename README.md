@@ -11,7 +11,7 @@ npm install ndjson-cli
 * [ndjson-filter](#ndjson_filter) - filter objects
 * [ndjson-map](#ndjson_map) - transform objects
 * [ndjson-reduce](#ndjson_reduce) - reduce a stream of objects to a single value
-* [ndjson-split](#ndjson_split) - transform a stream of objects
+* [ndjson-split](#ndjson_split) - transform objects to streams of objects
 * [ndjson-join](#ndjson_join) - join two streams of objects into a single stream
 * [ndjson-sort](#ndjson_sort) - sort a stream of objects
 * [ndjson-top](#ndjson_top) - select the top objects from a stream
