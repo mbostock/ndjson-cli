@@ -73,5 +73,31 @@ Sorts the newline-delimited JSON stream on stdin according to the specified comp
 For example, to sort a stream of GeoJSON features by their name property:
 
 ```
-shp2json example.shp | ndjson-sort 'a.properties.name.localeCompare(b.properties.name)'
+shp2json -n example.shp | ndjson-sort 'a.properties.name.localeCompare(b.properties.name)'
+```
+
+## Recipes
+
+To reverse a stream:
+
+```
+shp2json -n example.shp | tail -r
+```
+
+To take the first 3 objects in a stream:
+
+```
+shp2json -n example.shp | head -n 3
+```
+
+To take the last 3 objects in a stream:
+
+```
+shp2json -n example.shp | tail -n 3
+```
+
+To take all but the first 3 objects in a stream:
+
+```
+shp2json -n example.shp | tail -n +4
 ```
