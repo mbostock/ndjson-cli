@@ -1,0 +1,87 @@
+#!/usr/bin/env node
+
+var readline = require("readline"),
+    vm = require("vm"),
+    expression = require("./expression"),
+    output = require("./output");
+
+if (process.argv.length < 3) {
+  process.argv[2] = "a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN";
+  process.argv[3] = "1";
+} else if (process.argv.length === 3) {
+  if (isNaN(process.argv[2])) {
+    process.argv[3] = "1";
+  } else {
+    process.argv[3] = process.argv[2];
+    process.argv[2] = "a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN";
+  }
+} else if (process.argv.length > 4) {
+  console.error("usage: ndjson-top [expression] [count]");
+  process.exit(1);
+}
+
+var i = -1,
+    heap = new Heap(+process.argv[3], function(a, b) { return sandbox.a = a, sandbox.b = b, compare.runInContext(context); }),
+    sandbox = {a: undefined, b: undefined},
+    compare = expression(process.argv[2]),
+    context = new vm.createContext(sandbox);
+
+readline.createInterface({
+  input: process.stdin,
+  output: null
+}).on("line", function(line) {
+  ++i;
+  try {
+    heap.push(JSON.parse(line));
+  } catch (error) {
+    console.error("stdin:" + (i + 1));
+    console.error(line);
+    console.error("^");
+    console.error("SyntaxError: " + error.message);
+    process.exit(1);
+  }
+}).on("close", function() {
+  var result
+  while (!(result = heap.pop()).done) {
+    output(result.value);
+  }
+});
+
+function Heap(k, compare) {
+  this._array = [];
+  this._n = 0;
+  this._k = k;
+  this._compare = compare;
+}
+
+Heap.prototype.push = function(object) {
+  heap_up(this, this._array[this._n] = object, this._n++);
+  if (this._array.length > this._k) this.pop();
+};
+
+Heap.prototype.pop = function(object) {
+  if (this._n <= 0) return {done: true, value: undefined};
+  var removed = this._array[0], object;
+  if (--this._n > 0) object = this._array[this._n], heap_down(this, this._array[0] = object, 0);
+  return {done: false, value: removed};
+};
+
+function heap_up(heap, object, i) {
+  while (i > 0) {
+    var j = ((i + 1) >> 1) - 1, parent = heap._array[j];
+    if (heap._compare(object, parent) >= 0) break;
+    heap._array[i] = parent;
+    heap._array[i = j] = object;
+  }
+}
+
+function heap_down(heap, object, i) {
+  while (true) {
+    var r = (i + 1) << 1, l = r - 1, j = i, child = heap._array[j];
+    if (l < heap._n && heap._compare(heap._array[l], child) < 0) child = heap._array[j = l];
+    if (r < heap._n && heap._compare(heap._array[r], child) < 0) child = heap._array[j = r];
+    if (j === i) break;
+    heap._array[i] = child;
+    heap._array[i = j] = object;
+  }
+}

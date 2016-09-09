@@ -8,7 +8,7 @@ var readline = require("readline"),
 if (process.argv.length < 3) {
   process.argv[2] = "a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN";
 } else if (process.argv.length > 3) {
-  console.error("usage: ndjson-sort <expression>");
+  console.error("usage: ndjson-sort [expression]");
   process.exit(1);
 }
 

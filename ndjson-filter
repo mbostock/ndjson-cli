@@ -8,7 +8,7 @@ var readline = require("readline"),
 if (process.argv.length < 3) {
   process.argv[2] = "true";
 } else if (process.argv.length > 3) {
-  console.error("usage: ndjson-filter <expression>");
+  console.error("usage: ndjson-filter [expression]");
   process.exit(1);
 }
 

@@ -48,7 +48,7 @@ shp2json -n example.shp | ndjson-map 'd.geometry'
 
 <a name="ndjson_reduce" href="ndjson_reduce">#</a> <b>ndjson-reduce</b> [<i>expression</i> [<i>initial</i>]]
 
-Reduces the newline-delimited JSON stream on stdin according to the specified *expression*. For each JSON object in the input stream, evaluates the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream and the previous value *p*, which is initialized to *initial*. If *expression* and *initial* are not specified, they default to `p.push(d), p` and `[]`, respectively, merging all input objects into a single array, like the inverse of [ndjson-split](#ndjson_split). Otherwise, if *initial* is not specified, the first time the *expression* is evaluated *p* will be equal to the first object in the stream (*i* = 0) and *d* will be equal to the second (*i* = 1). Outputs the last result when the stream ends. This program is much like [*array*.reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce).
+Reduces the newline-delimited JSON stream on stdin according to the specified *expression*. For each JSON object in the input stream, evaluates the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream and the previous value *p*, which is initialized to *initial*. If *expression* and *initial* are not specified, they default to `p.push(d), p` and `[]`, respectively, merging all input objects into a single array like the inverse of [ndjson-split](#ndjson_split). Otherwise, if *initial* is not specified, the first time the *expression* is evaluated *p* will be equal to the first object in the stream (*i* = 0) and *d* will be equal to the second (*i* = 1). Outputs the last result when the stream ends. This program is much like [*array*.reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce).
 
 For example, to count the number of objects in a stream of GeoJSON features from [shp2json](https://github.com/mbostock/shapefile/blob/master/README.md#shp2json), like `wc -l`:
 
@@ -87,6 +87,18 @@ For example, to sort a stream of GeoJSON features by their name property:
 ```
 shp2json -n example.shp | ndjson-sort 'a.properties.name.localeCompare(b.properties.name)'
 ```
+
+<a name="ndjson_top" href="ndjson_top">#</a> <b>ndjson-top</b> [<i>expression</i>] [<i>count</i>]
+
+Selects the top *count* objects from the newline-delimited JSON stream on stdin according to the specified comparator *expression*. (This [selection algorithm](https://en.wikipedia.org/wiki/Selection_algorithm) is implemented using partial heap sort.) After reading the entire input stream, outputs the top *count* objects in ascending order. As with [ndjson-sort](#ndjson_sort), the input objects are compared by evaluating the *expression* for two given JSON objects *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js). If *count* is not specified, it defaults to 1. If the input stream has fewer than *count* objects, this program is equivalent to [ndjson-sort](#ndjson_sort).
+
+For example, to output the GeoJSON feature with the largest size property:
+
+```
+shp2json -n example.shp | ndjson-top 'a.properties.size - b.properties.size'
+```
+
+This program is equivalent to `ndjson-sort expression | tail -n count`, except it is much more efficient if *count* is much smaller than the size of the input object stream.
 
 ## Recipes
 
