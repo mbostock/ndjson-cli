@@ -19,7 +19,8 @@
   },
   "bin": {
     "ndjson-filter": "ndjson-filter",
-    "ndjson-map": "ndjson-map"
+    "ndjson-map": "ndjson-map",
+    "ndjson-reduce": "ndjson-reduce"
   },
   "scripts": {
     "postpublish": "git push && git push --tags"
