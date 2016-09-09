@@ -19,8 +19,8 @@ readline.createInterface({
     results.push(JSON.parse(line));
   } catch (error) {
     console.error("stdin:" + (i + 1));
-    console.error("    " + line);
-    console.error("    ^");
+    console.error(line);
+    console.error("^");
     console.error("SyntaxError: " + error.message);
     process.exit(1);
   }
