@@ -8,6 +8,14 @@ npm install ndjson-cli
 
 ## Command Line Reference
 
+* [ndjson-filter](#ndjson_filter) - filter objects
+* [ndjson-map](#ndjson_map) - transform objects
+* [ndjson-reduce](#ndjson_reduce) - reduce a stream of objects to a single value
+* [ndjson-split](#ndjson_split) - transform a stream of objects
+* [ndjson-join](#ndjson_join) - join two streams of objects into a single stream
+* [ndjson-sort](#ndjson_sort) - sort a stream of objects
+* [ndjson-top](#ndjson_top) - select the top objects from a stream
+
 <a name="ndjson_filter" href="ndjson_filter">#</a> <b>ndjson-filter</b> [<i>expression</i>]
 
 Filters the newline-delimited JSON stream on stdin according to the specified *expression*: if the *expression* evaluates truthily for the given JSON object *d* at the given zero-based index *i* in the stream, the resulting JSON object is output to stdout; otherwise, it is ignored. If *expression* is not specified, it defaults to `true`. This program is much like [*array*.filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
