@@ -122,10 +122,10 @@ The resulting output is:
 [{"name":"Bob","color":"blue"},{"name":"Bob","number":"102"}]
 ```
 
-To consolidate the results into a single object, use [ndjson-map](#ndjson-map):
+To consolidate the results into a single object, use [ndjson-map](#ndjson-map) and [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign):
 
 ```
-ndjson-join <(csv2json -n a.csv) <(csv2json -n b.csv) 'd.name' | ndjson-map '{name: d[0].name, color: d[0].color, number: d[1].number}'
+ndjson-join <(csv2json -n a.csv) <(csv2json -n b.csv) 'd.name' | ndjson-map 'Object.assign(d[0], d[1])'
 ```
 
 <a name="ndjson_sort" href="#ndjson_sort">#</a> <b>ndjson-sort</b> [<i>expression</i>]
