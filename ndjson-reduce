@@ -5,8 +5,11 @@ var readline = require("readline"),
     expression = require("./expression"),
     output = require("./output");
 
-if (process.argv.length < 3 || process.argv.length > 4) {
-  console.error("usage: ndjson-reduce <expression> [initial]");
+if (process.argv.length < 3) {
+  process.argv[2] = "p.push(d), p";
+  process.argv[3] = "[]";
+} else if (process.argv.length > 4) {
+  console.error("usage: ndjson-reduce [expression, [initial]]");
   process.exit(1);
 }
 
