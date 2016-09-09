@@ -20,7 +20,7 @@ readline.createInterface({
     console.error("stdin:" + (i + 1));
     console.error("    " + line);
     console.error("    ^");
-    console.error(error.stack);
+    console.error("SyntaxError: " + error.message);
     process.exit(1);
   }
   sandbox.p = unset ? (unset = false, sandbox.d) : reduce.runInContext(context);
