@@ -24,6 +24,12 @@ Or, to skip every other feature:
 shp2json -n example.shp | ndjson-filter 'i & 1'
 ```
 
+Or to take a random 10% sample:
+
+```
+shp2json -n example.shp | ndjson-filter 'Math.random() < 0.1'
+```
+
 Side-effects during filter are allowed. For example, to delete a property:
 
 ```
