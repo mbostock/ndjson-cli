@@ -18,5 +18,8 @@
   },
   "bin": {
     "ndjson-filter": "ndjson-filter"
+  },
+  "scripts": {
+    "postpublish": "git push && git push --tags"
   }
 }
