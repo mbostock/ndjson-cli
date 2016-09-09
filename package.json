@@ -1,6 +1,6 @@
 {
   "name": "ndjson-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Command line tools for operating on newline-delimited JSON streams.",
   "keywords": [
     "ndjson",
