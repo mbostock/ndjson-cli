@@ -158,6 +158,12 @@ This program is equivalent to `ndjson-sort expression | tail -n count`, except i
 
 ## Recipes
 
+To count the number of objects in a stream:
+
+```
+shp2json -n example.shp | wc -l
+```
+
 To reverse a stream:
 
 ```
