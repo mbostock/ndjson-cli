@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+
+var readline = require("readline"),
+    vm = require("vm"),
+    stringify = require("./stringify");
+
+var i = -1,
+    results = [],
+    sandbox = {a: undefined, b: undefined},
+    compare = new vm.Script(process.argv[2]),
+    context = new vm.createContext(sandbox);
+
+readline.createInterface({
+  input: process.stdin,
+  output: null
+}).on("line", function(line) {
+  ++i;
+  try {
+    results.push(JSON.parse(line));
+  } catch (error) {
+    console.error("stdin:" + (i + 1));
+    console.error("    " + line);
+    console.error("    ^");
+    console.error("SyntaxError: " + error.message);
+    process.exit(1);
+  }
+}).on("close", function() {
+  results
+      .sort(function(a, b) { return sandbox.a = a, sandbox.b = b, compare.runInContext(context); })
+      .forEach(function(o) { process.stdout.write(stringify(o) + "\n"); });
+});

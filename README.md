@@ -65,3 +65,13 @@ For example, given a single GeoJSON feature collection from [shp2json](https://g
 ```
 shp2json example.shp | ndjson-split 'd.features'
 ```
+
+<a name="ndjson_sort" href="ndjson_sort">#</a> <b>ndjson-sort</b> <i>expression</i>
+
+Sorts the newline-delimited JSON stream on stdin according to the specified comparator *expression*. After reading the entire input stream, [sorts the array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) of objects with a comparator that evaluates the *expression* for two given JSON objects *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined.
+
+For example, to sort a stream of GeoJSON features by their name property:
+
+```
+shp2json example.shp | ndjson-sort 'a.properties.name.localeCompare(b.properties.name)'
+```
