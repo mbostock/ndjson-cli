@@ -2,19 +2,27 @@
 
 var readline = require("readline"),
     vm = require("vm"),
+    commander = require("commander"),
+    external = require("./external"),
     expression = require("./expression"),
     output = require("./output");
 
-if (process.argv.length < 3) {
-  process.argv[2] = "d";
-} else if (process.argv.length > 3) {
-  console.error("usage: ndjson-map [expression]");
+commander
+    .version(require("./package.json").version)
+    .usage("[options] [expression]")
+    .option("-r, --require <module:symbol>", "require an external module", external)
+    .parse(process.argv);
+
+if (commander.args.length < 1) {
+  commander.args[0] = "d";
+} else if (commander.args.length > 1) {
+  commander.outputHelp();
   process.exit(1);
 }
 
 var i = -1,
-    sandbox = {d: undefined, i: i},
-    map = expression(process.argv[2]),
+    sandbox = commander.require,
+    map = expression(commander.args[0]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({

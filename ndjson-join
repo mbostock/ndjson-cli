@@ -3,31 +3,38 @@
 var fs = require("fs"),
     readline = require("readline"),
     vm = require("vm"),
+    commander = require("commander"),
+    external = require("./external"),
     expression = require("./expression"),
     output = require("./output");
 
+commander
+    .version(require("./package.json").version)
+    .usage("[options] [a-expression [b-expression]] <a-file> <b-file>")
+    .option("-r, --require <module:symbol>", "require an external module", external)
+    .parse(process.argv);
 
-if (process.argv.length < 4 || process.argv.length > 6) {
-  console.error("usage: ndjson-join [a-expression [b-expression]] <a-file> <b-file>");
+if (commander.args.length < 2 || commander.args.length > 4) {
+  commander.outputHelp();
   process.exit(1);
-} else if (process.argv.length < 6) {
-  if (process.argv.length < 5) {
-    process.argv.splice(2, 0, "i");
+} else if (commander.args.length < 4) {
+  if (commander.args.length < 3) {
+    commander.args.splice(0, 0, "i");
   }
-  process.argv.splice(3, 0, process.argv[2]);
+  commander.args.splice(1, 0, commander.args[0]);
 }
 
 var ai = -1,
     bi = -1,
     ci = 0,
-    sandbox = {d: undefined, i: -1},
+    sandbox = commander.require,
     map = new Map,
-    aid = expression(process.argv[2]),
-    bid = expression(process.argv[3]),
+    aid = expression(commander.args[0]),
+    bid = expression(commander.args[1]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({
-  input: process.argv[4] === "-" ? process.stdin : fs.createReadStream(process.argv[4]),
+  input: commander.args[2] === "-" ? process.stdin : fs.createReadStream(commander.args[2]),
   output: null
 }).on("line", function(line) {
   sandbox.i = ++ai;
@@ -48,7 +55,7 @@ readline.createInterface({
 });
 
 readline.createInterface({
-  input: process.argv[5] === "-" ? process.stdin : fs.createReadStream(process.argv[5]),
+  input: commander.args[3] === "-" ? process.stdin : fs.createReadStream(commander.args[3]),
   output: null
 }).on("line", function(line) {
   sandbox.i = ++bi;
