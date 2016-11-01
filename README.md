@@ -16,7 +16,7 @@ npm install ndjson-cli
 * [ndjson-sort](#ndjson_sort) - sort a stream of objects
 * [ndjson-top](#ndjson_top) - select the top objects from a stream
 
-<a name="ndjson_filter" href="#ndjson_filter">#</a> <b>ndjson-filter</b> [<i>expression</i>]
+<a name="ndjson_filter" href="#ndjson_filter">#</a> <b>ndjson-filter</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-filter "Source")
 
 Filters the newline-delimited JSON stream on stdin according to the specified *expression*: if the *expression* evaluates truthily for the given JSON object *d* at the given zero-based index *i* in the stream, the resulting JSON object is output to stdout; otherwise, it is ignored. If *expression* is not specified, it defaults to `true`. This program is much like [*array*.filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
 
@@ -44,7 +44,7 @@ Side-effects during filter are allowed. For example, to delete a property:
 shp2json -n example.shp | ndjson-filter 'delete d.properties.FID, true'
 ```
 
-<a name="ndjson_map" href="#ndjson_map">#</a> <b>ndjson-map</b> [<i>expression</i>]
+<a name="ndjson_map" href="#ndjson_map">#</a> <b>ndjson-map</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-map "Source")
 
 Maps the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the result of evaluating the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream. If *expression* is not specified, it defaults to `d`. This program is much like [*array*.map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map).
 
@@ -54,7 +54,7 @@ For example, given a stream of GeoJSON features from [shp2json](https://github.c
 shp2json -n example.shp | ndjson-map 'd.geometry'
 ```
 
-<a name="ndjson_reduce" href="#ndjson_reduce">#</a> <b>ndjson-reduce</b> [<i>expression</i> [<i>initial</i>]]
+<a name="ndjson_reduce" href="#ndjson_reduce">#</a> <b>ndjson-reduce</b> [<i>expression</i> [<i>initial</i>]] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-reduce "Source")
 
 Reduces the newline-delimited JSON stream on stdin according to the specified *expression*. For each JSON object in the input stream, evaluates the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream and the previous value *p*, which is initialized to *initial*. If *expression* and *initial* are not specified, they default to `p.push(d), p` and `[]`, respectively, merging all input objects into a single array (the inverse of [ndjson-split](#ndjson_split)). Otherwise, if *initial* is not specified, the first time the *expression* is evaluated *p* will be equal to the first object in the stream (*i* = 0) and *d* will be equal to the second (*i* = 1). Outputs the last result when the stream ends. This program is much like [*array*.reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce).
 
@@ -76,7 +76,7 @@ To convert a newline-delimited JSON stream of values to a JSON array, the invers
 ndjson-reduce < values.ndjson > array.json
 ```
 
-<a name="ndjson_split" href="#ndjson_split">#</a> <b>ndjson-split</b> [<i>expression</i>]
+<a name="ndjson_split" href="#ndjson_split">#</a> <b>ndjson-split</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-split "Source")
 
 Expands the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the results of evaluating the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream. The result of evaluating the *expression* must be an array (though it may be the empty array if no objects should be output for the given input). If *expression* is not specified, it defaults to `d`, which assumes that the input objects are arrays.
 
@@ -92,7 +92,7 @@ To convert a JSON array to a newline-delimited JSON stream of values, the invers
 ndjson-split < array.json > values.ndjson
 ```
 
-<a name="ndjson_join" href="#ndjson_join">#</a> <b>ndjson-join</b> <i>a-file</i> <i>b-file</i> [<i>a-expression</i> [<i>b-expression</i>]]
+<a name="ndjson_join" href="#ndjson_join">#</a> <b>ndjson-join</b> <i>a-file</i> <i>b-file</i> [<i>a-expression</i> [<i>b-expression</i>]] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-join "Source")
 
 [Joins](https://en.wikipedia.org/wiki/Join_\(SQL\)#Inner_join) the two newline-delimited JSON streams in *a-file* and *b-file* according to the specified expressions *a-expression* and *b-expression*. For each JSON object *d* at the zero-based index *i* in the stream *a-file*, the corresponding key is the result of evaluating the *a-expression*. Similarly, for each JSON object *d* at the zero-based index *i* in the stream *b-file*, the corresponding key is the result of evaluating the *b-expression*. When both input streams end, for each distinct key, the cartesian product of corresponding objects *a* and *b* are output as an array `[a, b]`. If *a-expression* is not specified, it defaults to `i`, joining the two streams by line number; in this case, the length of the output stream is the shorter of the two input streams. If *b-expression* is not specified, it defaults to *a-expression*.
 
@@ -134,7 +134,7 @@ To consolidate the results into a single object, use [ndjson-map](#ndjson-map) a
 ndjson-join <(csv2json -n a.csv) <(csv2json -n b.csv) 'd.name' | ndjson-map 'Object.assign(d[0], d[1])'
 ```
 
-<a name="ndjson_sort" href="#ndjson_sort">#</a> <b>ndjson-sort</b> [<i>expression</i>]
+<a name="ndjson_sort" href="#ndjson_sort">#</a> <b>ndjson-sort</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-sort "Source")
 
 Sorts the newline-delimited JSON stream on stdin according to the specified comparator *expression*. After reading the entire input stream, [sorts the array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) of objects with a comparator that evaluates the *expression* for two given JSON objects *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js).
 
@@ -144,7 +144,7 @@ For example, to sort a stream of GeoJSON features by their name property:
 shp2json -n example.shp | ndjson-sort 'a.properties.name.localeCompare(b.properties.name)'
 ```
 
-<a name="ndjson_top" href="#ndjson_top">#</a> <b>ndjson-top</b> [<i>expression</i>] [<i>count</i>]
+<a name="ndjson_top" href="#ndjson_top">#</a> <b>ndjson-top</b> [<i>expression</i>] [<i>count</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-top "Source")
 
 Selects the top *count* objects from the newline-delimited JSON stream on stdin according to the specified comparator *expression*. (This [selection algorithm](https://en.wikipedia.org/wiki/Selection_algorithm) is implemented using partial heap sort.) After reading the entire input stream, outputs the top *count* objects in ascending order. As with [ndjson-sort](#ndjson_sort), the input objects are compared by evaluating the *expression* for two given JSON objects *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js). If *count* is not specified, it defaults to 1. If the input stream has fewer than *count* objects, this program is equivalent to [ndjson-sort](#ndjson_sort).
 
