@@ -54,6 +54,12 @@ For example, given a stream of GeoJSON features from [shp2json](https://github.c
 shp2json -n example.shp | ndjson-map 'd.geometry'
 ```
 
+Or you can extract the properties, and then convert to [tab-separated values](https://github.com/d3/d3-dsv):
+
+```
+shp2json -n example.shp | ndjson-map 'd.properties' | json2tsv -n > example.tsv
+```
+
 <a name="ndjson_reduce" href="#ndjson_reduce">#</a> <b>ndjson-reduce</b> [<i>expression</i> [<i>initial</i>]] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-reduce "Source")
 
 Reduces the newline-delimited JSON stream on stdin according to the specified *expression*. For each JSON object in the input stream, evaluates the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream and the previous value *p*, which is initialized to *initial*. If *expression* and *initial* are not specified, they default to `p.push(d), p` and `[]`, respectively, merging all input objects into a single array (the inverse of [ndjson-split](#ndjson_split)). Otherwise, if *initial* is not specified, the first time the *expression* is evaluated *p* will be equal to the first object in the stream (*i* = 0) and *d* will be equal to the second (*i* = 1). Outputs the last result when the stream ends. This program is much like [*array*.reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce).
