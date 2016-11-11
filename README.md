@@ -107,7 +107,7 @@ To convert a JSON array to a newline-delimited JSON stream of values, the invers
 ndjson-split < array.json > values.ndjson
 ```
 
-<a name="ndjson_join" href="#ndjson_join">#</a> <b>ndjson-join</b> <i>a-file</i> <i>b-file</i> [<i>a-expression</i> [<i>b-expression</i>]] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-join "Source")
+<a name="ndjson_join" href="#ndjson_join">#</a> <b>ndjson-join</b> [<i>a-expression</i> [<i>b-expression</i>]] <i>a-file</i> <i>b-file</i> [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-join "Source")
 
 [Joins](https://en.wikipedia.org/wiki/Join_\(SQL\)#Inner_join) the two newline-delimited JSON streams in *a-file* and *b-file* according to the specified expressions *a-expression* and *b-expression*. For each JSON object *d* at the zero-based index *i* in the stream *a-file*, the corresponding key is the result of evaluating the *a-expression*. Similarly, for each JSON object *d* at the zero-based index *i* in the stream *b-file*, the corresponding key is the result of evaluating the *b-expression*. When both input streams end, for each distinct key, the cartesian product of corresponding objects *a* and *b* are output as an array `[a, b]`. If *a-expression* is not specified, it defaults to `i`, joining the two streams by line number; in this case, the length of the output stream is the shorter of the two input streams. If *b-expression* is not specified, it defaults to *a-expression*.
 
@@ -132,7 +132,7 @@ Bob,102
 To merge these into a single stream by name using [csv2json](https://github.com/d3/d3-dsv/blob/master/README.md#command-line-reference):
 
 ```
-ndjson-join <(csv2json -n a.csv) <(csv2json -n b.csv) 'd.name'
+ndjson-join 'd.name' <(csv2json -n a.csv) <(csv2json -n b.csv)
 ```
 
 The resulting output is:
@@ -146,7 +146,7 @@ The resulting output is:
 To consolidate the results into a single object, use [ndjson-map](#ndjson-map) and [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign):
 
 ```
-ndjson-join <(csv2json -n a.csv) <(csv2json -n b.csv) 'd.name' | ndjson-map 'Object.assign(d[0], d[1])'
+ndjson-join 'd.name' <(csv2json -n a.csv) <(csv2json -n b.csv) | ndjson-map 'Object.assign(d[0], d[1])'
 ```
 
 <a name="ndjson_sort" href="#ndjson_sort">#</a> <b>ndjson-sort</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-sort "Source")

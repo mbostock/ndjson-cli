@@ -6,14 +6,15 @@ var fs = require("fs"),
     expression = require("./expression"),
     output = require("./output");
 
-if (process.argv.length < 6) {
-  if (process.argv.length < 5) {
-    process.argv[4] = "i";
-  }
-  process.argv[5] = process.argv[4];
-} else if (process.argv.length > 6) {
-  console.error("usage: ndjson-join <a-file> <b-file> [a-expression [b-expression]]");
+
+if (process.argv.length < 4 || process.argv.length > 6) {
+  console.error("usage: ndjson-join [a-expression [b-expression]] <a-file> <b-file>");
   process.exit(1);
+} else if (process.argv.length < 6) {
+  if (process.argv.length < 5) {
+    process.argv.splice(2, 0, "i");
+  }
+  process.argv.splice(3, 0, process.argv[2]);
 }
 
 var ai = -1,
@@ -21,12 +22,12 @@ var ai = -1,
     ci = 0,
     sandbox = {d: undefined, i: -1},
     map = new Map,
-    aid = expression(process.argv[4]),
-    bid = expression(process.argv[5]),
+    aid = expression(process.argv[2]),
+    bid = expression(process.argv[3]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({
-  input: process.argv[2] === "-" ? process.stdin : fs.createReadStream(process.argv[2]),
+  input: process.argv[4] === "-" ? process.stdin : fs.createReadStream(process.argv[4]),
   output: null
 }).on("line", function(line) {
   sandbox.i = ++ai;
@@ -47,7 +48,7 @@ readline.createInterface({
 });
 
 readline.createInterface({
-  input: process.argv[3] === "-" ? process.stdin : fs.createReadStream(process.argv[3]),
+  input: process.argv[5] === "-" ? process.stdin : fs.createReadStream(process.argv[5]),
   output: null
 }).on("line", function(line) {
   sandbox.i = ++bi;
