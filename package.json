@@ -18,6 +18,7 @@
     "url": "http://github.com/mbostock/ndjson-cli.git"
   },
   "bin": {
+    "ndjson-cat": "ndjson-cat",
     "ndjson-filter": "ndjson-filter",
     "ndjson-join": "ndjson-join",
     "ndjson-map": "ndjson-map",

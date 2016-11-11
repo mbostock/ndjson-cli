@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+
+var fs = require("fs"),
+    output = require("./output");
+
+if (process.argv.length < 3) {
+  process.argv[2] = "-";
+}
+
+var i = 1, n = process.argv.length, task = Promise.resolve();
+while (++i < n) task = task.then(cat(process.argv[i]));
+task.catch(function(error) { console.error(error); });
+
+function cat(input) {
+  return new Promise(function(resolve, reject) {
+    var data = [], stream = input === "-" ? process.stdin : fs.createReadStream(input);
+    stream
+        .on("data", function(d) { data.push(d); })
+        .on("error", reject)
+        .on("end", function() {
+          try {
+            var d = JSON.parse(data);
+          } catch (e) {
+            console.error((input === "-" ? "stdin" : input) + ": SyntaxError: " + e.message);
+            process.exit(1);
+          };
+          output(d);
+          resolve();
+        });
+  });
+}
