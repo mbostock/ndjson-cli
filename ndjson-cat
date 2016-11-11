@@ -19,7 +19,7 @@ function cat(input) {
         .on("error", reject)
         .on("end", function() {
           try {
-            var d = JSON.parse(data);
+            var d = JSON.parse(Buffer.concat(data));
           } catch (e) {
             console.error((input === "-" ? "stdin" : input) + ": SyntaxError: " + e.message);
             process.exit(1);
