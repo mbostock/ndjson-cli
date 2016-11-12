@@ -108,6 +108,12 @@ To merge a stream into a feature collection:
 shp2json -n example.shp | ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}'
 ```
 
+Or equivalently, in two steps:
+
+```
+shp2json -n example.shp | ndjson-reduce | ndjson-map '{type: "FeatureCollection", features: d}'
+```
+
 To convert a newline-delimited JSON stream of values to a JSON array, the inverse of [ndjson-split](#ndjson_split):
 
 ```
