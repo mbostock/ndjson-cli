@@ -6,6 +6,29 @@ Unix-y tools for operating on [newline-delimited JSON](http://ndjson.org) stream
 npm install ndjson-cli
 ```
 
+All ndjson-cli commands support [--help](#_help) and [--version](#_version). Commands that take an expression also support [--require](#_require).
+
+<a name="_help" href="_help">#</a> <i>ndjson</i> <b>-h</b>
+<br><a name="_help" href="_help">#</a> <i>ndjson</i> <b>--help</b>
+
+Output usage information.
+
+<a name="_version" href="_version">#</a> <i>ndjson</i> <b>-V</b>
+<br><a name="_version" href="_version">#</a> <i>ndjson</i> <b>--version</b>
+
+Output the version number.
+
+<a name="_require" href="_require">#</a> <i>ndjson</i> <b>-r</b> [<i>name</i>=]<i>module</i>
+<br><a name="_require" href="_require">#</a> <i>ndjson</i> <b>--require</b> [<i>name</i>=]<i>module</i>
+
+Requires the specified *module*, making it available for use in any expressions used by this command. The loaded module is available as the symbol *name*. If *name* is not specified, it defaults to *module*. (If *module* is not a valid identifier, you must specify a *name*.) For example, to [sort](#ndjson_sort) using [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending):
+
+```
+ndjson-sort -r d3=d3-array 'd3.ascending(a, b)' < values.ndjson
+```
+
+The required *module* is resolved relative to the [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If the *module* is not found during normal resolution, the [global npm root](https://docs.npmjs.com/cli/root) is also searched, allowing you to require globally-installed modules from the command line.
+
 ## Command Line Reference
 
 * [ndjson-cat](#ndjson_cat) - concatenate objects to form a stream
@@ -206,28 +229,3 @@ To take all but the first 3 objects in a stream:
 ```
 shp2json -n example.shp | tail -n +4
 ```
-
-### Options
-
-All ndjson-cli commands support [--help](#_help) and [--version](#_version). Commands that take an expression also support [--require](#_require).
-
-<a name="_help" href="_help">#</a> <i>ndjson</i> <b>-h</b>
-<br><a name="_help" href="_help">#</a> <i>ndjson</i> <b>--help</b>
-
-Output usage information.
-
-<a name="_version" href="_version">#</a> <i>ndjson</i> <b>-V</b>
-<br><a name="_version" href="_version">#</a> <i>ndjson</i> <b>--version</b>
-
-Output the version number.
-
-<a name="_require" href="_require">#</a> <i>ndjson</i> <b>-r</b> [<i>name</i>=]<i>module</i>
-<br><a name="_require" href="_require">#</a> <i>ndjson</i> <b>--require</b> [<i>name</i>=]<i>module</i>
-
-Requires the specified *module*, making it available for use in any expressions used by this command. The loaded module is available as the symbol *name*. If *name* is not specified, it defaults to *module*. (If *module* is not a valid identifier, you must specify a *name*.) For example, to [sort](#ndjson_sort) using [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending):
-
-```
-ndjson-sort -r d3=d3-array 'd3.ascending(a, b)' < values.ndjson
-```
-
-The required *module* is resolved relative to the [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If the *module* is not found during normal resolution, the [global npm root](https://docs.npmjs.com/cli/root) is also searched, allowing you to require globally-installed modules from the command line.
