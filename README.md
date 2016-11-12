@@ -8,18 +8,18 @@ npm install ndjson-cli
 
 All ndjson-cli commands support [--help](#_help) and [--version](#_version). Commands that take an expression also support [--require](#_require).
 
-<a name="_help" href="_help">#</a> <i>ndjson</i> <b>-h</b>
-<br><a name="_help" href="_help">#</a> <i>ndjson</i> <b>--help</b>
+<a name="_help" href="_help">#</a> <i>ndjson-command</i> <b>-h</b>
+<br><a name="_help" href="_help">#</a> <i>ndjson-command</i> <b>--help</b>
 
 Output usage information.
 
-<a name="_version" href="_version">#</a> <i>ndjson</i> <b>-V</b>
-<br><a name="_version" href="_version">#</a> <i>ndjson</i> <b>--version</b>
+<a name="_version" href="_version">#</a> <i>ndjson-command</i> <b>-V</b>
+<br><a name="_version" href="_version">#</a> <i>ndjson-command</i> <b>--version</b>
 
 Output the version number.
 
-<a name="_require" href="_require">#</a> <i>ndjson</i> <b>-r</b> [<i>name</i>=]<i>module</i>
-<br><a name="_require" href="_require">#</a> <i>ndjson</i> <b>--require</b> [<i>name</i>=]<i>module</i>
+<a name="_require" href="_require">#</a> <i>ndjson-command</i> <b>-r</b> [<i>name</i>=]<i>module</i>
+<br><a name="_require" href="_require">#</a> <i>ndjson-command</i> <b>--require</b> [<i>name</i>=]<i>module</i>
 
 Requires the specified *module*, making it available for use in any expressions used by this command. The loaded module is available as the symbol *name*. If *name* is not specified, it defaults to *module*. (If *module* is not a valid identifier, you must specify a *name*.) For example, to [sort](#ndjson_sort) using [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending):
 
