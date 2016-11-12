@@ -27,7 +27,7 @@ Requires the specified *module*, making it available for use in any expressions 
 ndjson-sort -r d3=d3-array 'd3.ascending(a, b)' < values.ndjson
 ```
 
-The required *module* is resolved relative to the [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If the *module* is not found during normal resolution, the [global npm root](https://docs.npmjs.com/cli/root) is also searched, allowing you to require globally-installed modules from the command line.
+The required *module* is resolved relative to the [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If the *module* is not found during normal resolution, the [global root](https://docs.npmjs.com/cli/root) is also searched, allowing you to require global modules from the command line.
 
 ## Command Line Reference
 
