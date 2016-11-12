@@ -17,6 +17,29 @@ npm install ndjson-cli
 * [ndjson-sort](#ndjson_sort) - sort a stream of objects
 * [ndjson-top](#ndjson_top) - select the top objects from a stream
 
+All ndjson-cli commands support [--help](#_help) and [--version](#_version). Commands that take an expression also support [--require](#_require).
+
+<a name="_help" href="_help">#</a> <i>ndjson</i> <b>-h</b>
+<br><a name="_help" href="_help">#</a> <i>ndjson</i> <b>--help</b>
+
+Output usage information.
+
+<a name="_version" href="_version">#</a> <i>ndjson</i> <b>-V</b>
+<br><a name="_version" href="_version">#</a> <i>ndjson</i> <b>--version</b>
+
+Output the version number.
+
+<a name="_require" href="_require">#</a> <i>ndjson</i> <b>-r</b> [<i>name</i>=]<i>module</i>
+<br><a name="_require" href="_require">#</a> <i>ndjson</i> <b>--require</b> [<i>name</i>=]<i>module</i>
+
+Requires the specified *module*, making it available for use in any expressions used by this command. The loaded module is available as the symbol *name*. If *name* is not specified, it defaults to *module*. (If *module* is not a valid identifier, you must specify a *name*.) For example, to [sort](#ndjson_sort) using [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending):
+
+```
+ndjson-sort -r d3=d3-array 'd3.ascending(a, b)' < values.ndjson
+```
+
+The required *module* is resolved relative to the [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If the *module* is not found during normal resolution, the [global npm root](https://docs.npmjs.com/cli/root) is also searched, allowing you to require globally-installed modules from the command line.
+
 <a name="ndjson_cat" href="#ndjson_cat">#</a> <b>ndjson-cat</b> [<i>files…</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-cat "Source")
 
 Sequentially concatenates one or more input *files* containing JSON into a single newline-delimited JSON on stdout. If *files* is not specified, it defaults to “-”, indicating stdin. This command is especially useful for converting pretty-printed JSON (that contains newlines) into newline-delimited JSON. For example, to print the binaries exported by this repository’s package.json:
@@ -159,9 +182,9 @@ For example, to sort a stream of GeoJSON features by their name property:
 shp2json -n example.shp | ndjson-sort 'a.properties.name.localeCompare(b.properties.name)'
 ```
 
-<a name="ndjson_top" href="#ndjson_top">#</a> <b>ndjson-top</b> [<i>expression</i>] [<i>count</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-top "Source")
+<a name="ndjson_top" href="#ndjson_top">#</a> <b>ndjson-top</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-top "Source")
 
-Selects the top *count* objects from the newline-delimited JSON stream on stdin according to the specified comparator *expression*. (This [selection algorithm](https://en.wikipedia.org/wiki/Selection_algorithm) is implemented using partial heap sort.) After reading the entire input stream, outputs the top *count* objects in ascending order. As with [ndjson-sort](#ndjson_sort), the input objects are compared by evaluating the *expression* for two given JSON objects *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js). If *count* is not specified, it defaults to 1. If the input stream has fewer than *count* objects, this program is equivalent to [ndjson-sort](#ndjson_sort).
+Selects the top *n* objects (see [-n](#ndjson_top_n)) from the newline-delimited JSON stream on stdin according to the specified comparator *expression*. (This [selection algorithm](https://en.wikipedia.org/wiki/Selection_algorithm) is implemented using partial heap sort.) After reading the entire input stream, outputs the top *n* objects in ascending order. As with [ndjson-sort](#ndjson_sort), the input objects are compared by evaluating the *expression* for two given JSON objects *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js). If the input stream has fewer than *n* objects, this program is equivalent to [ndjson-sort](#ndjson_sort).
 
 For example, to output the GeoJSON feature with the largest size property:
 
@@ -169,7 +192,11 @@ For example, to output the GeoJSON feature with the largest size property:
 shp2json -n example.shp | ndjson-top 'a.properties.size - b.properties.size'
 ```
 
-This program is equivalent to `ndjson-sort expression | tail -n count`, except it is much more efficient if *count* is smaller than the size of the input object stream.
+This program is equivalent to `ndjson-sort expression | tail -n n`, except it is much more efficient if *n* is smaller than the size of the input object stream.
+
+<a name="ndjson_top_n" href="ndjson_top_n">#</a> ndjson_top <b>-n</b> <i>count</i>
+
+Specify the maximum number of output values. Defaults to 1.
 
 ## Recipes
 

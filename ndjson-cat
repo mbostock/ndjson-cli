@@ -1,14 +1,21 @@
 #!/usr/bin/env node
 
 var fs = require("fs"),
+    commander = require("commander"),
     output = require("./output");
 
-if (process.argv.length < 3) {
-  process.argv[2] = "-";
+commander
+    .version(require("./package.json").version)
+    .usage("[options] [files…]")
+    .description("Concatenate JSON values to form a newline-delimited JSON stream.")
+    .parse(process.argv);
+
+if (commander.args.length < 1) {
+  commander.args[0] = "-";
 }
 
-var i = 1, n = process.argv.length, task = Promise.resolve();
-while (++i < n) task = task.then(cat(process.argv[i]));
+var i = -1, n = commander.args.length, task = Promise.resolve();
+while (++i < n) task = task.then(cat(commander.args[i]));
 task.catch(function(error) { console.error(error); });
 
 function cat(input) {

@@ -2,20 +2,31 @@
 
 var readline = require("readline"),
     vm = require("vm"),
+    commander = require("commander"),
+    requires = require("./requires"),
     expression = require("./expression"),
     output = require("./output");
 
-if (process.argv.length < 3) {
-  process.argv[2] = "a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN";
-} else if (process.argv.length > 3) {
-  console.error("usage: ndjson-sort [expression]");
+commander
+    .version(require("./package.json").version)
+    .usage("[options] [expression]")
+    .description("Sort values in a newline-delimited JSON stream.")
+    .option("-r, --require <name=module>", "require a module", requires, {a: undefined, b: undefined})
+    .parse(process.argv);
+
+if (commander.args.length > 1) {
+  commander.outputHelp();
   process.exit(1);
+}
+
+if (commander.args.length < 1) {
+  commander.args[0] = "a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN";
 }
 
 var i = -1,
     results = [],
-    sandbox = {a: undefined, b: undefined},
-    compare = expression(process.argv[2]),
+    sandbox = commander.require,
+    compare = expression(commander.args[0]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({

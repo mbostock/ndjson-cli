@@ -2,21 +2,32 @@
 
 var readline = require("readline"),
     vm = require("vm"),
+    commander = require("commander"),
+    requires = require("./requires"),
     expression = require("./expression"),
     output = require("./output");
 
-if (process.argv.length < 3) {
-  process.argv[2] = "p.push(d), p";
-  process.argv[3] = "[]";
-} else if (process.argv.length > 4) {
-  console.error("usage: ndjson-reduce [expression [initial]]");
+commander
+    .version(require("./package.json").version)
+    .usage("[options] [expression [initial]]")
+    .description("Reduce a newline-delimited JSON stream to a single value.")
+    .option("-r, --require <name=module>", "require a module", requires, {p: undefined, d: undefined, i: -1})
+    .parse(process.argv);
+
+if (commander.args.length > 2) {
+  commander.outputHelp();
   process.exit(1);
 }
 
+if (commander.args.length < 1) {
+  commander.args[0] = "p.push(d), p";
+  commander.args[1] = "[]";
+}
+
 var i = -1,
-    unset = process.argv.length < 4,
-    sandbox = {p: unset ? undefined : expression(process.argv[3], "initial").runInNewContext(), d: undefined, i: i},
-    reduce = expression(process.argv[2]),
+    sandbox = commander.require,
+    unset = commander.args.length < 2 || (sandbox.p = expression(commander.args[1], "initial").runInNewContext(), false),
+    reduce = expression(commander.args[0]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({

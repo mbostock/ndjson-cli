@@ -31,7 +31,8 @@
     "postpublish": "git push && git push --tags"
   },
   "dependencies": {
-    "acorn": "4",
-    "commander": "2"
+    "acorn": "^4.0.3",
+    "commander": "^2.9.0",
+    "resolve": "^1.1.7"
   }
 }

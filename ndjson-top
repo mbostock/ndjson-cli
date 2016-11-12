@@ -2,28 +2,32 @@
 
 var readline = require("readline"),
     vm = require("vm"),
+    commander = require("commander"),
+    requires = require("./requires"),
     expression = require("./expression"),
     output = require("./output");
 
-if (process.argv.length < 3) {
-  process.argv[2] = "a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN";
-  process.argv[3] = "1";
-} else if (process.argv.length === 3) {
-  if (isNaN(process.argv[2])) {
-    process.argv[3] = "1";
-  } else {
-    process.argv[3] = process.argv[2];
-    process.argv[2] = "a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN";
-  }
-} else if (process.argv.length > 4) {
-  console.error("usage: ndjson-top [expression] [count]");
+commander
+    .version(require("./package.json").version)
+    .usage("[options] [expression]")
+    .description("Select the top values from a newline-delimited JSON stream.")
+    .option("-n <value>", "the maximum number of output values", 1)
+    .option("-r, --require <name=module>", "require a module", requires, {a: undefined, b: undefined})
+    .parse(process.argv);
+
+if (commander.args.length > 1) {
+  commander.outputHelp();
   process.exit(1);
 }
 
+if (commander.args.length < 1) {
+  commander.args[0] = "a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN";
+}
+
 var i = -1,
-    heap = new Heap(+process.argv[3], function(a, b) { return sandbox.a = a, sandbox.b = b, compare.runInContext(context); }),
-    sandbox = {a: undefined, b: undefined},
-    compare = expression(process.argv[2]),
+    sandbox = commander.require,
+    heap = new Heap(commander.n, function(a, b) { return sandbox.a = a, sandbox.b = b, compare.runInContext(context); }),
+    compare = expression(commander.args[0]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({

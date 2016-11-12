@@ -3,21 +3,24 @@
 var readline = require("readline"),
     vm = require("vm"),
     commander = require("commander"),
-    external = require("./external"),
+    requires = require("./requires"),
     expression = require("./expression"),
     output = require("./output");
 
 commander
     .version(require("./package.json").version)
     .usage("[options] [expression]")
-    .option("-r, --require <module:symbol>", "require an external module", external)
+    .description("Transform values in a newline-delimited JSON stream.")
+    .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
     .parse(process.argv);
+
+if (commander.args.length > 1) {
+  commander.outputHelp();
+  process.exit(1);
+}
 
 if (commander.args.length < 1) {
   commander.args[0] = "d";
-} else if (commander.args.length > 1) {
-  commander.outputHelp();
-  process.exit(1);
 }
 
 var i = -1,
