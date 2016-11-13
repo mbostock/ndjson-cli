@@ -6,6 +6,20 @@ Unix-y tools for operating on [newline-delimited JSON](http://ndjson.org) stream
 npm install ndjson-cli
 ```
 
+## Command Line Reference
+
+* [Options](#options)
+* [ndjson-cat](#ndjson_cat) - concatenate objects to form a stream
+* [ndjson-filter](#ndjson_filter) - filter objects
+* [ndjson-map](#ndjson_map) - transform objects
+* [ndjson-reduce](#ndjson_reduce) - reduce a stream of objects to a single value
+* [ndjson-split](#ndjson_split) - transform objects to streams of objects
+* [ndjson-join](#ndjson_join) - join two streams of objects into a single stream
+* [ndjson-sort](#ndjson_sort) - sort a stream of objects
+* [ndjson-top](#ndjson_top) - select the top objects from a stream
+
+### Options
+
 All ndjson-cli commands support [--help](#_help) and [--version](#_version). Commands that take an expression also support [--require](#_require).
 
 <a name="_help" href="_help">#</a> <i>ndjson-command</i> <b>-h</b>
@@ -29,16 +43,7 @@ ndjson-sort -r d3=d3-array 'd3.ascending(a, b)' < values.ndjson
 
 The required *module* is resolved relative to the [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If the *module* is not found during normal resolution, the [global root](https://docs.npmjs.com/cli/root) is also searched, allowing you to require global modules from the command line.
 
-## Command Line Reference
-
-* [ndjson-cat](#ndjson_cat) - concatenate objects to form a stream
-* [ndjson-filter](#ndjson_filter) - filter objects
-* [ndjson-map](#ndjson_map) - transform objects
-* [ndjson-reduce](#ndjson_reduce) - reduce a stream of objects to a single value
-* [ndjson-split](#ndjson_split) - transform objects to streams of objects
-* [ndjson-join](#ndjson_join) - join two streams of objects into a single stream
-* [ndjson-sort](#ndjson_sort) - sort a stream of objects
-* [ndjson-top](#ndjson_top) - select the top objects from a stream
+### ndjson-cat
 
 <a name="ndjson_cat" href="#ndjson_cat">#</a> <b>ndjson-cat</b> [<i>files…</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-cat "Source")
 
@@ -47,6 +52,8 @@ Sequentially concatenates one or more input *files* containing JSON into a singl
 ```
 ndjson-cat package.json | ndjson-split 'Object.keys(d.bin)'
 ```
+
+### ndjson-filter
 
 <a name="ndjson_filter" href="#ndjson_filter">#</a> <b>ndjson-filter</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-filter "Source")
 
@@ -76,6 +83,8 @@ Side-effects during filter are allowed. For example, to delete a property:
 shp2json -n example.shp | ndjson-filter 'delete d.properties.FID, true'
 ```
 
+### ndjson-map
+
 <a name="ndjson_map" href="#ndjson_map">#</a> <b>ndjson-map</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-map "Source")
 
 Maps the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the result of evaluating the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream. If *expression* is not specified, it defaults to `d`. This program is much like [*array*.map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map).
@@ -91,6 +100,8 @@ Or you can extract the properties, and then convert to [tab-separated values](ht
 ```
 shp2json -n example.shp | ndjson-map 'd.properties' | json2tsv -n > example.tsv
 ```
+
+### ndjson-reduce
 
 <a name="ndjson_reduce" href="#ndjson_reduce">#</a> <b>ndjson-reduce</b> [<i>expression</i> [<i>initial</i>]] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-reduce "Source")
 
@@ -120,6 +131,8 @@ To convert a newline-delimited JSON stream of values to a JSON array, the invers
 ndjson-reduce < values.ndjson > array.json
 ```
 
+### ndjson-split
+
 <a name="ndjson_split" href="#ndjson_split">#</a> <b>ndjson-split</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-split "Source")
 
 Expands the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the results of evaluating the *expression* for the given JSON object *d* at the given zero-based index *i* in the stream. The result of evaluating the *expression* must be an array (though it may be the empty array if no objects should be output for the given input). If *expression* is not specified, it defaults to `d`, which assumes that the input objects are arrays.
@@ -135,6 +148,8 @@ To convert a JSON array to a newline-delimited JSON stream of values, the invers
 ```
 ndjson-split < array.json > values.ndjson
 ```
+
+### ndjson-join
 
 <a name="ndjson_join" href="#ndjson_join">#</a> <b>ndjson-join</b> [<i>a-expression</i> [<i>b-expression</i>]] <i>a-file</i> <i>b-file</i> [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-join "Source")
 
@@ -178,6 +193,8 @@ To consolidate the results into a single object, use [ndjson-map](#ndjson-map) a
 ndjson-join 'd.name' <(csv2json -n a.csv) <(csv2json -n b.csv) | ndjson-map 'Object.assign(d[0], d[1])'
 ```
 
+### ndjson-sort
+
 <a name="ndjson_sort" href="#ndjson_sort">#</a> <b>ndjson-sort</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-sort "Source")
 
 Sorts the newline-delimited JSON stream on stdin according to the specified comparator *expression*. After reading the entire input stream, [sorts the array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) of objects with a comparator that evaluates the *expression* for two given JSON objects *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js).
@@ -187,6 +204,8 @@ For example, to sort a stream of GeoJSON features by their name property:
 ```
 shp2json -n example.shp | ndjson-sort 'a.properties.name.localeCompare(b.properties.name)'
 ```
+
+### ndjson-top
 
 <a name="ndjson_top" href="#ndjson_top">#</a> <b>ndjson-top</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-top "Source")
 
