@@ -57,7 +57,7 @@ ndjson-cat package.json | ndjson-split 'Object.keys(d.bin)'
 
 <a name="ndjson_filter" href="#ndjson_filter">#</a> <b>ndjson-filter</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-filter "Source")
 
-Filters the newline-delimited JSON stream on stdin according to the specified *expression*: if the *expression* evaluates truthily for the given JSON value *d* at the given zero-based index *i* in the stream, the resulting JSON value is output to stdout; otherwise, it is ignored. If *expression* is not specified, it defaults to `true`. This program is much like [*array*.filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
+Filters the newline-delimited JSON stream on stdin according to the specified *expression*: if the *expression* evaluates truthily for the given value *d* at the given zero-based index *i* in the stream, the resulting value is output to stdout; otherwise, it is ignored. If *expression* is not specified, it defaults to `true`. This program is much like [*array*.filter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
 
 For example, given a stream of GeoJSON features from [shp2json](https://github.com/mbostock/shapefile/blob/master/README.md#shp2json), you can filter the stream to include only the multi-polygon features like so:
 
@@ -87,7 +87,7 @@ shp2json -n example.shp | ndjson-filter 'delete d.properties.FID, true'
 
 <a name="ndjson_map" href="#ndjson_map">#</a> <b>ndjson-map</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-map "Source")
 
-Maps the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the result of evaluating the *expression* for the given JSON value *d* at the given zero-based index *i* in the stream. If *expression* is not specified, it defaults to `d`. This program is much like [*array*.map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map).
+Maps the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the result of evaluating the *expression* for the given value *d* at the given zero-based index *i* in the stream. If *expression* is not specified, it defaults to `d`. This program is much like [*array*.map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map).
 
 For example, given a stream of GeoJSON features from [shp2json](https://github.com/mbostock/shapefile/blob/master/README.md#shp2json), you can convert the stream to geometries like so:
 
@@ -105,7 +105,7 @@ shp2json -n example.shp | ndjson-map 'd.properties' | json2tsv -n > example.tsv
 
 <a name="ndjson_reduce" href="#ndjson_reduce">#</a> <b>ndjson-reduce</b> [<i>expression</i> [<i>initial</i>]] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-reduce "Source")
 
-Reduces the newline-delimited JSON stream on stdin according to the specified *expression*. For each JSON value in the input stream, evaluates the *expression* for the given JSON value *d* at the given zero-based index *i* in the stream and the previous value *p*, which is initialized to *initial*. If *expression* and *initial* are not specified, they default to `p.push(d), p` and `[]`, respectively, merging all input values into a single array (the inverse of [ndjson-split](#ndjson_split)). Otherwise, if *initial* is not specified, the first time the *expression* is evaluated *p* will be equal to the first value in the stream (*i* = 0) and *d* will be equal to the second (*i* = 1). Outputs the last result when the stream ends. This program is much like [*array*.reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce).
+Reduces the newline-delimited JSON stream on stdin according to the specified *expression*. For each value in the input stream, evaluates the *expression* for the given value *d* at the given zero-based index *i* in the stream and the previous value *p*, which is initialized to *initial*. If *expression* and *initial* are not specified, they default to `p.push(d), p` and `[]`, respectively, merging all input values into a single array (the inverse of [ndjson-split](#ndjson_split)). Otherwise, if *initial* is not specified, the first time the *expression* is evaluated *p* will be equal to the first value in the stream (*i* = 0) and *d* will be equal to the second (*i* = 1). Outputs the last result when the stream ends. This program is much like [*array*.reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce).
 
 For example, to count the number of values in a stream of GeoJSON features from [shp2json](https://github.com/mbostock/shapefile/blob/master/README.md#shp2json), like `wc -l`:
 
@@ -135,7 +135,7 @@ ndjson-reduce < values.ndjson > array.json
 
 <a name="ndjson_split" href="#ndjson_split">#</a> <b>ndjson-split</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-split "Source")
 
-Expands the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the results of evaluating the *expression* for the given JSON value *d* at the given zero-based index *i* in the stream. The result of evaluating the *expression* must be an array (though it may be the empty array if no values should be output for the given input). If *expression* is not specified, it defaults to `d`, which assumes that the input values are arrays.
+Expands the newline-delimited JSON stream on stdin according to the specified *expression*: outputs the results of evaluating the *expression* for the given value *d* at the given zero-based index *i* in the stream. The result of evaluating the *expression* must be an array (though it may be the empty array if no values should be output for the given input). If *expression* is not specified, it defaults to `d`, which assumes that the input values are arrays.
 
 For example, given a single GeoJSON feature collection from [shp2json](https://github.com/mbostock/shapefile/blob/master/README.md#shp2json), you can convert a stream of features like so:
 
@@ -153,7 +153,7 @@ ndjson-split < array.json > values.ndjson
 
 <a name="ndjson_join" href="#ndjson_join">#</a> <b>ndjson-join</b> [<i>a-expression</i> [<i>b-expression</i>]] <i>a-file</i> <i>b-file</i> [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-join "Source")
 
-[Joins](https://en.wikipedia.org/wiki/Join_\(SQL\)#Inner_join) the two newline-delimited JSON streams in *a-file* and *b-file* according to the specified key expressions *a-expression* and *b-expression*. For each JSON value *d* at the zero-based index *i* in the stream *a-file*, the corresponding key is the result of evaluating the *a-expression*. Similarly, for each JSON value *d* at the zero-based index *i* in the stream *b-file*, the corresponding key is the result of evaluating the *b-expression*. When both input streams end, for each distinct key, the cartesian product of corresponding values *a* and *b* are output as an array `[a, b]`.
+[Joins](https://en.wikipedia.org/wiki/Join_\(SQL\)#Inner_join) the two newline-delimited JSON streams in *a-file* and *b-file* according to the specified key expressions *a-expression* and *b-expression*. For each value *d* at the zero-based index *i* in the stream *a-file*, the corresponding key is the result of evaluating the *a-expression*. Similarly, for each value *d* at the zero-based index *i* in the stream *b-file*, the corresponding key is the result of evaluating the *b-expression*. When both input streams end, for each distinct key, the cartesian product of corresponding values *a* and *b* are output as an array `[a, b]`.
 
 If *a-expression* is not specified, it defaults to `i`, joining the two streams by line number; in this case, the length of the output stream is the shorter of the two input streams. If *b-expression* is not specified, it defaults to *a-expression*.
 
@@ -199,7 +199,7 @@ ndjson-join 'd.name' <(csv2json -n a.csv) <(csv2json -n b.csv) | ndjson-map 'Obj
 
 <a name="ndjson_sort" href="#ndjson_sort">#</a> <b>ndjson-sort</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-sort "Source")
 
-Sorts the newline-delimited JSON stream on stdin according to the specified comparator *expression*. After reading the entire input stream, [sorts the array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) of values with a comparator that evaluates the *expression* for two given JSON values *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js).
+Sorts the newline-delimited JSON stream on stdin according to the specified comparator *expression*. After reading the entire input stream, [sorts the array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) of values with a comparator that evaluates the *expression* for two given values *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js).
 
 For example, to sort a stream of GeoJSON features by their name property:
 
@@ -211,7 +211,7 @@ shp2json -n example.shp | ndjson-sort 'a.properties.name.localeCompare(b.propert
 
 <a name="ndjson_top" href="#ndjson_top">#</a> <b>ndjson-top</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-top "Source")
 
-Selects the top *n* values (see [-n](#ndjson_top_n)) from the newline-delimited JSON stream on stdin according to the specified comparator *expression*. (This [selection algorithm](https://en.wikipedia.org/wiki/Selection_algorithm) is implemented using partial heap sort.) After reading the entire input stream, outputs the top *n* values in ascending order. As with [ndjson-sort](#ndjson_sort), the input values are compared by evaluating the *expression* for two given JSON values *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js). If the input stream has fewer than *n* values, this program is equivalent to [ndjson-sort](#ndjson_sort).
+Selects the top *n* values (see [-n](#ndjson_top_n)) from the newline-delimited JSON stream on stdin according to the specified comparator *expression*. (This [selection algorithm](https://en.wikipedia.org/wiki/Selection_algorithm) is implemented using partial heap sort.) After reading the entire input stream, outputs the top *n* values in ascending order. As with [ndjson-sort](#ndjson_sort), the input values are compared by evaluating the *expression* for two given values *a* and *b* from the input stream. If the resulting value is less than 0, then *a* appears before *b* in the output stream; if the value is greater than 0, then *a* appears after *b* in the output stream; any other value means that the partial order of *a* and *b* is undefined. If *expression* is not specified, it defaults to [ascending natural order](https://github.com/d3/d3-array/blob/master/src/ascending.js). If the input stream has fewer than *n* values, this program is equivalent to [ndjson-sort](#ndjson_sort).
 
 For example, to output the GeoJSON feature with the largest size property:
 
