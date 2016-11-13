@@ -10,7 +10,7 @@ var fs = require("fs"),
 
 commander
     .version(require("./package.json").version)
-    .usage("[options] [a-expression [b-expression]] <a-file> <b-file>")
+    .usage("[options] [expression₀ [expression₁]] <file₀> <file₁>")
     .description("Join two newline-delimited JSON streams into a stream of pairs.")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
     .parse(process.argv);
@@ -25,62 +25,62 @@ if (commander.args.length < 4) {
   commander.args.splice(1, 0, commander.args[0]);
 }
 
-var ai = -1,
-    bi = -1,
-    ci = 0,
+var i0 = -1,
+    i1 = -1,
+    ii = 0,
     sandbox = commander.require,
     map = new Map,
-    akey = expression(commander.args[0]),
-    bkey = expression(commander.args[1]),
+    key0 = expression(commander.args[0]),
+    key1 = expression(commander.args[1]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({
   input: commander.args[2] === "-" ? process.stdin : fs.createReadStream(commander.args[2]),
   output: null
 }).on("line", function(line) {
-  sandbox.i = ++ai;
+  sandbox.i = ++i0;
   try {
     sandbox.d = JSON.parse(line);
   } catch (error) {
-    console.error("stdin:" + (ai + 1));
+    console.error("stdin:" + (i0 + 1));
     console.error(line);
     console.error("^");
     console.error("SyntaxError: " + error.message);
     process.exit(1);
   }
-  var k = akey.runInContext(context);
-  if (map.has(k)) map.get(k).a.push(sandbox.d);
-  else map.set(k, {a: [sandbox.d], b: []});
+  var k = key0.runInContext(context);
+  if (map.has(k)) map.get(k)[0].push(sandbox.d);
+  else map.set(k, [[sandbox.d], []]);
 }).on("close", function() {
-  if ((ci |= 1) === 3) join();
+  if ((ii |= 1) === 3) join();
 });
 
 readline.createInterface({
   input: commander.args[3] === "-" ? process.stdin : fs.createReadStream(commander.args[3]),
   output: null
 }).on("line", function(line) {
-  sandbox.i = ++bi;
+  sandbox.i = ++i1;
   try {
     sandbox.d = JSON.parse(line);
   } catch (error) {
-    console.error("stdin:" + (bi + 1));
+    console.error("stdin:" + (i1 + 1));
     console.error(line);
     console.error("^");
     console.error("SyntaxError: " + error.message);
     process.exit(1);
   }
-  var k = bkey.runInContext(context);
-  if (map.has(k)) map.get(k).b.push(sandbox.d);
-  else map.set(k, {a: [], b: [sandbox.d]});
+  var k = key1.runInContext(context);
+  if (map.has(k)) map.get(k)[1].push(sandbox.d);
+  else map.set(k, [[], [sandbox.d]]);
 }).on("close", function() {
-  if ((ci |= 2) === 3) join();
+  if ((ii |= 2) === 3) join();
 });
 
 function join() {
   map.forEach(function(value, key) {
-    value.a.forEach(function(a) {
-      value.b.forEach(function(b) {
-        output([a, b]);
+    value[0].forEach(function(v0) {
+      value[1].forEach(function(v1) {
+        output([v0, v1]);
       });
     });
   });
