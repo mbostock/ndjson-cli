@@ -153,7 +153,9 @@ ndjson-split < array.json > values.ndjson
 
 <a name="ndjson_join" href="#ndjson_join">#</a> <b>ndjson-join</b> [<i>a-expression</i> [<i>b-expression</i>]] <i>a-file</i> <i>b-file</i> [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-join "Source")
 
-[Joins](https://en.wikipedia.org/wiki/Join_\(SQL\)#Inner_join) the two newline-delimited JSON streams in *a-file* and *b-file* according to the specified expressions *a-expression* and *b-expression*. For each JSON object *d* at the zero-based index *i* in the stream *a-file*, the corresponding key is the result of evaluating the *a-expression*. Similarly, for each JSON object *d* at the zero-based index *i* in the stream *b-file*, the corresponding key is the result of evaluating the *b-expression*. When both input streams end, for each distinct key, the cartesian product of corresponding objects *a* and *b* are output as an array `[a, b]`. If *a-expression* is not specified, it defaults to `i`, joining the two streams by line number; in this case, the length of the output stream is the shorter of the two input streams. If *b-expression* is not specified, it defaults to *a-expression*.
+[Joins](https://en.wikipedia.org/wiki/Join_\(SQL\)#Inner_join) the two newline-delimited JSON streams in *a-file* and *b-file* according to the specified key expressions *a-expression* and *b-expression*. For each JSON object *d* at the zero-based index *i* in the stream *a-file*, the corresponding key is the result of evaluating the *a-expression*. Similarly, for each JSON object *d* at the zero-based index *i* in the stream *b-file*, the corresponding key is the result of evaluating the *b-expression*. When both input streams end, for each distinct key, the cartesian product of corresponding objects *a* and *b* are output as an array `[a, b]`.
+
+If *a-expression* is not specified, it defaults to `i`, joining the two streams by line number; in this case, the length of the output stream is the shorter of the two input streams. If *b-expression* is not specified, it defaults to *a-expression*.
 
 For example, consider the CSV file *a.csv*:
 
