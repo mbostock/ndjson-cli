@@ -107,6 +107,12 @@ Or you can extract the properties, and then convert to [tab-separated values](ht
 shp2json -n example.shp | ndjson-map 'd.properties' | json2tsv -n > example.tsv
 ```
 
+You can also add new properties to each object by assigning them and then returning the original object:
+
+```
+shp2json -n example.shp | ndjson-map 'd.properties.version = 2, d' | json2tsv -n > example.v2.tsv
+```
+
 ### reduce
 
 <a name="ndjson_reduce" href="#ndjson_reduce">#</a> <b>ndjson-reduce</b> [<i>expression</i> [<i>initial</i>]] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-reduce "Source")
