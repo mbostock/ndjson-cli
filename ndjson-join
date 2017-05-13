@@ -13,6 +13,7 @@ commander
     .usage("[options] [expression₀ [expression₁]] <file₀> <file₁>")
     .description("Join two newline-delimited JSON streams into a stream of pairs.")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
+    .option("-c, --check-joins", "emits a warning for records in the first stream with no match")
     .parse(process.argv);
 
 if (commander.args.length < 2 || commander.args.length > 4) {
@@ -77,6 +78,29 @@ readline.createInterface({
 });
 
 function join() {
+
+  if(commander.checkJoins){
+    var missingKeys = [];
+    map.forEach(function(value, key) {
+      value[0].forEach(function(v0) {
+        if(value[1].length == 0){
+          missingKeys.push({key:key, record:v0})
+        }
+      })
+    });
+
+    if(missingKeys.length){
+      missingKeys.map(function(k){
+        console.warn("\nWarning: cannot join any record with:")
+        console.warn("key:", k.key)
+        console.warn("record:\n", k.record)
+
+      });
+      console.error("\nWarning: --check-joins options was specified but no joinable rows were found.");
+    }
+
+  }
+
   map.forEach(function(value, key) {
     value[0].forEach(function(v0) {
       value[1].forEach(function(v1) {
