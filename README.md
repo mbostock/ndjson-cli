@@ -236,35 +236,3 @@ This program is equivalent to `ndjson-sort expression | tail -n count`, except i
 <a name="ndjson_top_n" href="ndjson_top_n">#</a> ndjson-top <b>-n</b> <i>count</i>
 
 Specify the maximum number of output values. Defaults to 1.
-
-## Recipes
-
-To count the number of values in a stream:
-
-```
-shp2json -n example.shp | wc -l
-```
-
-To reverse a stream:
-
-```
-shp2json -n example.shp | tail -r
-```
-
-To take the first 3 values in a stream:
-
-```
-shp2json -n example.shp | head -n 3
-```
-
-To take the last 3 values in a stream:
-
-```
-shp2json -n example.shp | tail -n 3
-```
-
-To take all but the first 3 values in a stream:
-
-```
-shp2json -n example.shp | tail -n +4
-```
