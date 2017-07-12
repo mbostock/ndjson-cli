@@ -13,6 +13,8 @@ commander
     .usage("[options] [expression₀ [expression₁]] <file₀> <file₁>")
     .description("Join two newline-delimited JSON streams into a stream of pairs.")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
+    .option("--left", "Perform a left join", false)
+    .option("--right", "Perform a right join", false)
     .parse(process.argv);
 
 if (commander.args.length < 2 || commander.args.length > 4) {
@@ -24,6 +26,8 @@ if (commander.args.length < 4) {
   if (commander.args.length < 3) commander.args.splice(0, 0, "i");
   commander.args.splice(1, 0, commander.args[0]);
 }
+
+var join = commander.left ? leftJoin : commander.right ? rightJoin : innerJoin;
 
 var i0 = -1,
     i1 = -1,
@@ -76,12 +80,40 @@ readline.createInterface({
   if ((ii |= 2) === 3) join();
 });
 
-function join() {
+function innerJoin() {
   map.forEach(function(value, key) {
     value[0].forEach(function(v0) {
       value[1].forEach(function(v1) {
         output([v0, v1]);
       });
+    });
+  });
+}
+
+function leftJoin() {
+  map.forEach(function(value, key) {
+    value[0].forEach(function(v0) {
+      if (value[1].length === 0) {
+        output([v0, null])
+      } else {
+        value[1].forEach(function(v1) {
+          output([v0, v1]);
+        });
+      }
+    });
+  });
+}
+
+function rightJoin() {
+  map.forEach(function(value, key) {
+    value[1].forEach(function(v1) {
+      if (value[0].length === 0) {
+        output([null, v1])
+      } else {
+        value[0].forEach(function(v0) {
+          output([v0, v1]);
+        });
+      }
     });
   });
 }
