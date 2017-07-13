@@ -207,9 +207,9 @@ To consolidate the results into a single object, use [ndjson-map](#ndjson-map) a
 ndjson-join 'd.name' <(csv2json -n a.csv) <(csv2json -n b.csv) | ndjson-map 'Object.assign(d[0], d[1])'
 ```
 
-<a name="ndjson_join_left" href="ndjson_join_left">#</a> ndjson-join <b>--left</b><br>
-<a name="ndjson_join_right" href="ndjson_join_right">#</a> ndjson-join <b>--right</b><br>
-<a name="ndjson_join_outer" href="ndjson_join_outer">#</a> ndjson-join <b>--outer</b><br>
+<a name="ndjson_join_left" href="#ndjson_join_left">#</a> ndjson-join <b>--left</b><br>
+<a name="ndjson_join_right" href="#ndjson_join_right">#</a> ndjson-join <b>--right</b><br>
+<a name="ndjson_join_outer" href="#ndjson_join_outer">#</a> ndjson-join <b>--outer</b><br>
 
 Specify the type of join: [left](https://en.wikipedia.org/wiki/Join_\(SQL\)#Left_outer_join), [right](https://en.wikipedia.org/wiki/Join_\(SQL\)#Right_outer_join), or [outer](https://en.wikipedia.org/wiki/Join_\(SQL\)#Full_outer_join)). Empty values are output as `null`. If none of these arguments are specified, defaults to [inner](https://en.wikipedia.org/wiki/Join_\(SQL\)#Inner_join).
 
