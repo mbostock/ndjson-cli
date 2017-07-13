@@ -35,7 +35,10 @@ if ([commander.left, commander.right, commander.outer].filter(Boolean).length > 
   process.exit(1);
 }
 
-var join = commander.left ? leftJoin : commander.right ? rightJoin : commander.outer ? outerJoin : innerJoin;
+var join = commander.left ? joinLeft
+    : commander.right ? joinRight
+    : commander.outer ? joinOuter
+    : joinInner;
 
 var i0 = -1,
     i1 = -1,
@@ -88,7 +91,7 @@ readline.createInterface({
   if ((ii |= 2) === 3) join();
 });
 
-function innerJoin() {
+function joinInner() {
   map.forEach(function(value, key) {
     value[0].forEach(function(v0) {
       value[1].forEach(function(v1) {
@@ -98,26 +101,22 @@ function innerJoin() {
   });
 }
 
-function leftJoin() {
-  map.forEach(leftJoinValue);
+function joinLeft() {
+  map.forEach(joinLeftValue);
 }
 
-function rightJoin() {
-  map.forEach(rightJoinValue);
+function joinRight() {
+  map.forEach(joinRightValue);
 }
 
-
-function outerJoin() {
+function joinOuter() {
   map.forEach(function(value, key) {
-    if (value[0].length) {
-      leftJoinValue(value, key);
-    } else if (value[1].length) {
-      rightJoinValue(value, key);
-    }
+    if (value[0].length) joinLeftValue(value, key);
+    else if (value[1].length) joinRightValue(value, key);
   });
 }
 
-function leftJoinValue(value, key) {
+function joinLeftValue(value, key) {
   value[0].forEach(function(v0) {
     if (value[1].length) {
       value[1].forEach(function(v1) {
@@ -129,7 +128,7 @@ function leftJoinValue(value, key) {
   });
 }
 
-function rightJoinValue(value, key) {
+function joinRightValue(value, key) {
   value[1].forEach(function(v1) {
     if (value[0].length) {
       value[0].forEach(function(v0) {
