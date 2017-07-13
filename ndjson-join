@@ -13,8 +13,9 @@ commander
     .usage("[options] [expression₀ [expression₁]] <file₀> <file₁>")
     .description("Join two newline-delimited JSON streams into a stream of pairs.")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
-    .option("--left", "Perform a left join", false)
-    .option("--right", "Perform a right join", false)
+    .option("--left", "perform a left join", false)
+    .option("--right", "perform a right join", false)
+    .option("--outer", "perform an outer join", false)
     .parse(process.argv);
 
 if (commander.args.length < 2 || commander.args.length > 4) {
@@ -27,7 +28,7 @@ if (commander.args.length < 4) {
   commander.args.splice(1, 0, commander.args[0]);
 }
 
-var join = commander.left ? leftJoin : commander.right ? rightJoin : innerJoin;
+var join = commander.left ? leftJoin : commander.right ? rightJoin : commander.outer ? outerJoin : innerJoin;
 
 var i0 = -1,
     i1 = -1,
@@ -91,29 +92,44 @@ function innerJoin() {
 }
 
 function leftJoin() {
-  map.forEach(function(value, key) {
-    value[0].forEach(function(v0) {
-      if (value[1].length) {
-        value[1].forEach(function(v1) {
-          output([v0, v1]);
-        });
-      } else {
-        output([v0, null]);
-      }
-    });
-  });
+  map.forEach(leftJoinValue);
 }
 
 function rightJoin() {
+  map.forEach(rightJoinValue);
+}
+
+
+function outerJoin() {
   map.forEach(function(value, key) {
-    value[1].forEach(function(v1) {
-      if (value[0].length === 0) {
-        value[0].forEach(function(v0) {
-          output([v0, v1]);
-        });
-      } else {
-        output([null, v1]);
-      }
-    });
+    if (value[0].length) {
+      leftJoinValue(value, key);
+    } else if (value[1].length) {
+      rightJoinValue(value, key);
+    }
+  });
+}
+
+function leftJoinValue(value, key) {
+  value[0].forEach(function(v0) {
+    if (value[1].length) {
+      value[1].forEach(function(v1) {
+        output([v0, v1]);
+      });
+    } else {
+      output([v0, null]);
+    }
+  });
+}
+
+function rightJoinValue(value, key) {
+  value[1].forEach(function(v1) {
+    if (value[0].length) {
+      value[0].forEach(function(v0) {
+        output([v0, v1]);
+      });
+    } else {
+      output([null, v1]);
+    }
   });
 }
