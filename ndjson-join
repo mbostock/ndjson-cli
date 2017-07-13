@@ -28,6 +28,13 @@ if (commander.args.length < 4) {
   commander.args.splice(1, 0, commander.args[0]);
 }
 
+if ([commander.left, commander.right, commander.outer].filter(Boolean).length > 1) {
+  console.error();
+  console.error("  error: only one of --left, --right, --outer allowed")
+  console.error();
+  process.exit(1);
+}
+
 var join = commander.left ? leftJoin : commander.right ? rightJoin : commander.outer ? outerJoin : innerJoin;
 
 var i0 = -1,
