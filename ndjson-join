@@ -93,12 +93,12 @@ function innerJoin() {
 function leftJoin() {
   map.forEach(function(value, key) {
     value[0].forEach(function(v0) {
-      if (value[1].length === 0) {
-        output([v0, null])
-      } else {
+      if (value[1].length) {
         value[1].forEach(function(v1) {
           output([v0, v1]);
         });
+      } else {
+        output([v0, null]);
       }
     });
   });
@@ -108,11 +108,11 @@ function rightJoin() {
   map.forEach(function(value, key) {
     value[1].forEach(function(v1) {
       if (value[0].length === 0) {
-        output([null, v1])
-      } else {
         value[0].forEach(function(v0) {
           output([v0, v1]);
         });
+      } else {
+        output([null, v1]);
       }
     });
   });
