@@ -10,7 +10,9 @@ var readline = require("readline"),
 commander
     .version(require("./package.json").version)
     .usage("[options] [expression]")
-    .description("Transform values in a newline-delimited JSON stream.")
+    .description("Transform values in a newline-delimited JSON stream using a JavaScript expression where \"d\" is the value being transformed.\n\n" +
+                 // "  Example: ndjson-map --require crypto=crypto 'd.hash = crypto.createHmac('\"sha256\", \"SECRET\").update(d.message).digest(\"hex\"), d' < file.json")
+                 "  Example: ndjson-map --require fs=fs 'd.filesize = fs.statSync(d.filename).size, d'")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
     .parse(process.argv);
 
