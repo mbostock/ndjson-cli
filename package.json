@@ -25,7 +25,8 @@
     "ndjson-reduce": "ndjson-reduce",
     "ndjson-sort": "ndjson-sort",
     "ndjson-split": "ndjson-split",
-    "ndjson-top": "ndjson-top"
+    "ndjson-top": "ndjson-top",
+    "ndjson-uniq": "ndjson-uniq"
   },
   "scripts": {
     "postpublish": "git push && git push --tags"
