@@ -20,7 +20,7 @@ npm install ndjson-cli
 
 ### Options
 
-All ndjson-cli commands support [--help](#_help) and [--version](#_version). Commands that take an expression also support [--require](#_require).
+All ndjson-cli commands support [--help](#_help) and [--version](#_version). Commands that take an expression also support [--require](#_require).  Commands that take an input stream through stdin also support [--input](#_input).
 
 <a name="_help" href="#_help">#</a> <i>ndjson-command</i> <b>-h</b>
 <br><a name="_help" href="#_help">#</a> <i>ndjson-command</i> <b>--help</b>
@@ -48,6 +48,11 @@ ndjson-sort -r d3 'd3.ascending(a, b)' < values.ndjson
 ```
 
 The required *module* is resolved relative to the [current working directory](https://nodejs.org/api/process.html#process_process_cwd). If the *module* is not found during normal resolution, the [global root](https://docs.npmjs.com/cli/root) is also searched, allowing you to require global modules from the command line.
+
+<a name="_input" href="#_input">#</a> <i>ndjson-command</i> <b>-i</b> [<i>name</i>=]<i>filename</i>
+<br><a name="_input" href="#_input">#</a> <i>ndjson-command</i> <b>--input</b> [<i>name</i>=]<i>filename</i>
+
+Read input from file instead of stdin.
 
 ### cat
 
