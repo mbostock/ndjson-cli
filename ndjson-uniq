@@ -10,7 +10,7 @@ var readline = require("readline"),
 commander
     .version(require("./package.json").version)
     .usage("[options] [expression]")
-    .description("Select values with respect to an expression from a newline-delimited JSON stream.")
+    .description("Select unique values with respect to an expression from a newline-delimited JSON stream.")
     .option("-i, --input <name=input>", "specify an input file")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
     .parse(process.argv);
