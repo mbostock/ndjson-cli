@@ -11,6 +11,7 @@ commander
     .version(require("./package.json").version)
     .usage("[options] [expression]")
     .description("Select the top values from a newline-delimited JSON stream.")
+    .option("-i, --input <name=input>", "specify an input file")
     .option("-n <value>", "the maximum number of output values", 1)
     .option("-r, --require <name=module>", "require a module", requires, {a: undefined, b: undefined})
     .parse(process.argv);
@@ -25,13 +26,14 @@ if (commander.args.length < 1) {
 }
 
 var i = -1,
+    input = commander.input ? require('fs').createReadStream(commander.input) : process.stdin,
     sandbox = commander.require,
     heap = new Heap(commander.n, function(a, b) { return sandbox.a = a, sandbox.b = b, compare.runInContext(context); }),
     compare = expression(commander.args[0]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({
-  input: process.stdin,
+  input: input,
   output: null
 }).on("line", function(line) {
   ++i;
