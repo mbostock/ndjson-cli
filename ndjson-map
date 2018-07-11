@@ -11,6 +11,7 @@ commander
     .version(require("./package.json").version)
     .usage("[options] [expression]")
     .description("Transform values in a newline-delimited JSON stream.")
+    .option("-i, --input <name=input>", "specify an input file")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
     .parse(process.argv);
 
@@ -24,12 +25,13 @@ if (commander.args.length < 1) {
 }
 
 var i = -1,
+    input = commander.input ? require('fs').createReadStream(commander.input) : process.stdin,
     sandbox = commander.require,
     map = expression(commander.args[0]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({
-  input: process.stdin,
+  input: input,
   output: null
 }).on("line", function(line) {
   sandbox.i = ++i;

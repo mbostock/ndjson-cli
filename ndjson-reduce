@@ -11,6 +11,7 @@ commander
     .version(require("./package.json").version)
     .usage("[options] [expression [initial]]")
     .description("Reduce a newline-delimited JSON stream to a single value.")
+    .option("-i, --input <name=input>", "specify an input file")
     .option("-r, --require <name=module>", "require a module", requires, {p: undefined, d: undefined, i: -1})
     .parse(process.argv);
 
@@ -25,13 +26,14 @@ if (commander.args.length < 1) {
 }
 
 var i = -1,
+    input = commander.input ? require('fs').createReadStream(commander.input) : process.stdin,
     sandbox = commander.require,
     unset = commander.args.length < 2 || (sandbox.p = expression(commander.args[1], "initial").runInNewContext(), false),
     reduce = expression(commander.args[0]),
     context = new vm.createContext(sandbox);
 
 readline.createInterface({
-  input: process.stdin,
+  input: input,
   output: null
 }).on("line", function(line) {
   sandbox.i = ++i;
