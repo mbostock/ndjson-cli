@@ -243,6 +243,24 @@ This program is equivalent to `ndjson-sort expression | tail -n count`, except i
 
 Specify the maximum number of output values. Defaults to 1.
 
+### uniq
+
+<a name="ndjson_uniq" href="#ndjson_uniq">#</a> <b>ndjson-uniq</b> [<i>expression</i>] [<>](https://github.com/mbostock/ndjson-cli/blob/master/ndjson-uniq "Source")
+
+Selects unique values from the newline-delimited JSON stream on stdin with respect to the specified *expression*: if the *expression* evaluates to a previously unseen result for the given value *d* at the given zero-based index *i* in the stream, the resulting value is output to stdout; otherwise, it is ignored.  If *expression* is not specified, it defaults to `JSON.stringify(d)`.  This command is useful for removing duplicate entries from unclean datasets.
+
+For example, given a stream of GeoJSON features from [shp2json](https://github.com/mbostock/shapefile/blob/master/README.md#shp2json), you can filter the stream to include only the first feature with a given `country` property like so:
+
+```
+shp2json -n example.shp | ndjson-uniq 'd.properties.country'
+```
+
+You can use this output to find the total number of countries reflected in the stream:
+
+```
+shp2json -n example.shp | ndjson-uniq 'd.properties.country' | wc -l
+```
+
 ## Recipes
 
 To count the number of values in a stream:

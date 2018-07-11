@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+
+var readline = require("readline"),
+    vm = require("vm"),
+    commander = require("commander"),
+    requires = require("./requires"),
+    expression = require("./expression"),
+    output = require("./output");
+
+commander
+    .version(require("./package.json").version)
+    .usage("[options] [expression]")
+    .description("Select unique values with respect to an expression from a newline-delimited JSON stream.")
+    .option("-i, --input <name=input>", "specify an input file")
+    .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
+    .parse(process.argv);
+
+if (commander.args.length > 1) {
+  commander.outputHelp();
+  process.exit(1);
+}
+
+if (commander.args.length < 1) {
+  commander.args[0] = "JSON.stringify(d)";
+}
+
+var i = -1,
+    input = commander.input ? require('fs').createReadStream(commander.input) : process.stdin,
+    sandbox = commander.require,
+    evaluate = expression(commander.args[0]),
+    context = new vm.createContext(sandbox),
+    set = new Set();
+
+readline.createInterface({
+  input: input,
+  output: null
+}).on("line", function(line) {
+  sandbox.i = ++i;
+  try {
+    sandbox.d = JSON.parse(line);
+  } catch (error) {
+    console.error("stdin:" + (i + 1));
+    console.error(line);
+    console.error("^");
+    console.error("SyntaxError: " + error.message);
+    process.exit(1);
+  }
+  var value = evaluate.runInContext(context);
+  if (!set.has(value)) {
+    output(sandbox.d);
+    set.add(value);
+  }
+});
