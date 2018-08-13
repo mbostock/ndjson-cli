@@ -10,7 +10,9 @@ var readline = require("readline"),
 commander
     .version(require("./package.json").version)
     .usage("[options] [expression [initial]]")
-    .description("Reduce a newline-delimited JSON stream to a single value.")
+    .description("Reduce a newline-delimited JSON stream to a single value." +
+      "\n\n  expression: JavaScript expression where 'd' is row value, 'i' is row index, 'p' is accumulator" +
+        "\n  initial: JavaScript expression for initial value of accumulator. Defaults to 'd'")
     .option("-r, --require <name=module>", "require a module", requires, {p: undefined, d: undefined, i: -1})
     .parse(process.argv);
 

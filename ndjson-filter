@@ -10,7 +10,8 @@ var readline = require("readline"),
 commander
     .version(require("./package.json").version)
     .usage("[options] [expression]")
-    .description("Filter values in a newline-delimited JSON stream.")
+    .description("Filter values in a newline-delimited JSON stream." +
+      "\n\n  expression: JavaScript expression where 'd' is row value, 'i' is row index")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
     .parse(process.argv);
 
