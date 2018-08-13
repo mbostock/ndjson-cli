@@ -10,7 +10,8 @@ var readline = require("readline"),
 commander
     .version(require("./package.json").version)
     .usage("[options] [expression]")
-    .description("Select the top values from a newline-delimited JSON stream.")
+    .description("Select the top values from a newline-delimited JSON stream." +
+      "\n\n  expression: JavaScript expression returning integer, where 'a' and 'b' are row values to compare.")
     .option("-n <value>", "the maximum number of output values", 1)
     .option("-r, --require <name=module>", "require a module", requires, {a: undefined, b: undefined})
     .parse(process.argv);

@@ -10,7 +10,8 @@ var readline = require("readline"),
 commander
     .version(require("./package.json").version)
     .usage("[options] [expression]")
-    .description("Sort values in a newline-delimited JSON stream.")
+    .description("Sort values in a newline-delimited JSON stream." +
+      "\n\n  expression: JavaScript expression returning integer, where 'a' and 'b' are row values to compare.")
     .option("-r, --require <name=module>", "require a module", requires, {a: undefined, b: undefined})
     .parse(process.argv);
 

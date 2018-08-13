@@ -11,7 +11,9 @@ var fs = require("fs"),
 commander
     .version(require("./package.json").version)
     .usage("[options] [expression₀ [expression₁]] <file₀> <file₁>")
-    .description("Join two newline-delimited JSON streams into a stream of pairs.")
+    .description("Join two newline-delimited JSON streams into a stream of pairs." +
+      "\n\n  expression₀: JavaScript join expression for left stream. 'd': row value, 'i': row index (defaults to 'i')" +
+      "\n  expression₁: JavaScript join expression for right stream. 'd': row value, 'i': row index (defaults to 'expression₀')")
     .option("-r, --require <name=module>", "require a module", requires, {d: undefined, i: -1})
     .option("--left", "perform a left join", false)
     .option("--right", "perform a right join", false)
