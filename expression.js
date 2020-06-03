@@ -4,7 +4,10 @@ var acorn = require("acorn"),
 
 module.exports = function(value, name) {
   try {
-    var node = acorn.parse("(" + value + ")", {preserveParens: true});
+    var node = acorn.parse("(" + value + ")", {
+        preserveParens: true,
+        ecmaVersion: 9,
+    });
     if (node.type !== "Program") throw new Error("Expected program");
     if (node.body.length !== 1) throw new Error("Invalid expression");
     if (node.body[0].type !== "ExpressionStatement") throw new Error("Expected expression statement");
